@@ -14,6 +14,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::pe(QString str){
+    ui->plainTextEdit_2->appendPlainText(str);
+}
+
 void MainWindow::on_pushButton_clicked()
 {
     Parser P;

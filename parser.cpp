@@ -6,7 +6,7 @@
 #include <QApplication>
 
 int Parser::compile(){
-
+    // WiFi b1212556789
     return -1;
 }
 
@@ -86,6 +86,78 @@ void Parser::fetchSems(QString FileName, QMap<QString, int> &sems)
             }
         }
     }
+}
+
+void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
+{
+    //b("BLOCK. Line = " + QString::number(line));
+    //b(Block);
+    //b("\r\n\r\n\r\n\r\n\r\n");
+
+    QString str = Block; // вот! всегдя нужно нажимать Crtl+Mouse чтобы понять где объявлена переменная.
+    QString str_copy = str; // тот же принцип что и в предыдущей функции
+
+    QRegExp QR("[S|s]tep\\d+\\s");
+    QR.setMinimal(true);
+    QChar qc;
+    QRegExp QRStepN("\\d+");
+    QString StepArgs;
+
+    QString StepN;
+    QString step;
+    QStringList ThreeParts;
+
+    int lineBase = 0;  // позиция текущего шага из блока (в символах)
+    int lineInner = 0; // линия внутри блока. line - из аргументов функции - линия, с которой начинается Block.
+
+    while(1==1)
+    {
+        int i = QR.indexIn(str);
+        if(i<0) return;
+
+
+        lineInner = whatLine(str_copy, lineBase + i); // линия внутри блока! первая в блоке - нулевая здесь.
+        if(lineBase == 0) lineBase = i; // только в первом проходе, чтобы Block name{ попали сюда...
+
+        StepArgs = QR.cap(0);
+        str = str.right(str.length() - StepArgs.length());
+
+        // получение номера Step
+
+        QRStepN.indexIn(StepArgs);
+        StepN = QRStepN.cap(0);
+        globalStepNumber = StepN.toInt();
+        //globalResult += globalStepNumber;
+
+        int j = str.indexOf('{',i);
+
+        qc = str[j];
+
+        int bl=1;
+        int br=0;
+
+        while(bl != br)
+        {
+            j++;
+            qc = str[j];
+            if(qc=='{') bl++;
+            if(qc=='}') br++;
+        }
+
+        // Получение одного шага из оставшихся нескольких
+        step = str.mid(i,j-i);
+        str = str.right(str.length() - j);
+        lineBase += j + 1;
+
+        // Разбиваем шаг на составляющие
+        ThreeParts = Command_ControlBy_Options(step, line + lineInner);
+        parseFragment(ThreeParts[0], globalStepNumber, sems, line + lineInner + __CommandLine);
+        parseFragment(ThreeParts[1], globalStepNumber, sems, line + lineInner + __ControlByLine);
+        parseFragment(ThreeParts[2], globalStepNumber, sems, line + lineInner + __OptionsLine);
+
+        //ThreeParts = TrueThreeParts(step, line+lineInner);
+    }
+
 }
 
 void Parser::splitBlocks(QString code)
