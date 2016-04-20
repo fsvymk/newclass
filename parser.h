@@ -3,6 +3,8 @@
 
 #include "qstring.h"
 #include "QStringList"
+#include <QMap>
+#include <QXmlStreamReader>
 
 class Parser{
 public:
@@ -13,7 +15,11 @@ public:
 private:
     QStringList strings;         // Все строки текущего блока
     QStringList Blocks;          // Все блоки
-    void        splitBlocks();
+
+    bool        parseSem(QXmlStreamReader &xml, QMap<QString, int> &sems);
+    QString     displaySems(QMap<QString, int> &sems);
+    void        fetchSems(QString FileName, QMap<QString, int> &sems);
+    void        splitBlocks(QString code);
 };
 
 #endif // PARSER_H

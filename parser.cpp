@@ -1,20 +1,104 @@
 #include "parser.h"
+#include <qxmlstream.h>
+#include <QFile>
+#include <QIODevice>
+#include <QMessageBox>
+#include <QApplication>
 
 int Parser::compile(){
 
     return -1;
 }
 
-void Parser::splitBlocks()
+bool Parser::parseSem(QXmlStreamReader &xml, QMap<QString, int> &sems)
 {
-    temporary_green();
-    ui->PARSER_TEXT_RESULT->clear();
+     //p("MainWindow::parseSem");
+     if (xml.tokenType() != QXmlStreamReader::StartElement && xml.name() == "sem")
+         return false;
+     QXmlStreamAttributes attributes = xml.attributes();
+     int id = 0;
+     if (attributes.hasAttribute("id")) {
+         id = attributes.value("id").toInt();
+     }
+     else
+         return false;
+
+     xml.readNext();
+     while (!(xml.tokenType() == QXmlStreamReader::EndElement && xml.name() == "sem"))
+     {
+         if (xml.tokenType() == QXmlStreamReader::StartElement)
+         {
+             if (xml.name() == "name"){
+                 xml.readNext();
+                 QString name = xml.text().toString();
+                 if (sems.contains(name))
+                     return false;
+                 sems.insert(name, id);
+             }
+         }
+         xml.readNext();
+     }
+     return true;
+}
+
+
+QString Parser::displaySems(QMap<QString, int> &sems)
+{
+    QMap<QString, int>::const_iterator it = sems.begin();
+    for(;it != sems.end(); ++it)
+    {
+       return "KEY:" + it.key() + "=" + QString::number(it.value());
+    }
+}
+
+void Parser::fetchSems(QString FileName, QMap<QString, int> &sems)
+{
+    QFile file(FileName);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            {
+                    /*
+                        QMessageBox::critical(this,"Load XML File Problem",
+                        "Couldn't open config.xml to load settings for parse",
+                        QMessageBox::Ok);
+                        return;
+                    */
+            }
+
+    QXmlStreamReader xml(&file);
+
+    while (!xml.atEnd() && !xml.hasError())
+    {
+        QXmlStreamReader::TokenType token = xml.readNext();
+        if (token == QXmlStreamReader::StartDocument)
+            continue;
+        if (token == QXmlStreamReader::StartElement)
+        {
+            if (xml.name() == "sems")
+                continue;
+            if (xml.name() == "sem"){
+                if (!parseSem(xml, sems)) {
+                   /* QMessageBox::critical(this,"XML File Problem",
+                    "Error parse XML file",
+                    QMessageBox::Ok); */
+                    return;
+                }
+            }
+        }
+    }
+}
+
+void Parser::splitBlocks(QString code)
+{
+    //temporary_green();
+    //ui->PARSER_TEXT_RESULT->clear();
 
     QMap<QString, int> globalSems;
     fetchSems(":/config.xml", globalSems);
     displaySems(globalSems);
 
-    QString str = ui->parser_codeEditor->toPlainText();
+    //QString str = ui->parser_codeEditor->toPlainText();
+    QString str  = code;    // из аргумента
     QString str_copy = str; // т.к. str будет урезаться в процессе разделения на блоки.
 
     // Проверка парности скобок.
