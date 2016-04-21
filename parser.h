@@ -15,6 +15,7 @@ public:
     QStringList errors;
 
     void        pe(QString str);    // print error
+
     void        addIncludeFile(QString filename);
 
     QString     allErrors();
@@ -25,6 +26,9 @@ private:
 
     QStringList strings;         // Все строки текущего блока
     QStringList Blocks;          // Все блоки
+
+    int         checkDefines();
+    int         checkVariables();
 
     bool        parseSem(QXmlStreamReader &xml, QMap<QString, int> &sems);
     QString     displaySems(QMap<QString, int> &sems);

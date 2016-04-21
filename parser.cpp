@@ -8,21 +8,35 @@
 #include <QDate>
 #include <QTime>
 
-int Parser::compile(){
-    // WiFi b1212556789
-    return -1;
+int Parser::checkDefines(){
+    return 0;
+}
 
-    // Подключить все инклуды по списку
-
-
-
-    // Найти все #define
+int Parser::checkVariables(){
+    int varCount = 0;
+    return varCount;
 }
 
 void Parser::addIncludeFile(QString filename){
     if(!this->includeFiles.contains(filename,Qt::CaseSensitive))
     this->includeFiles.append(filename);
 }
+
+int Parser::compile(){
+    // WiFi b1212556789
+    return -1;
+
+    // Подключить все инклуды по списку
+
+    this->addIncludeFile("definitions.h");
+    this->addIncludeFile("project1.h");
+
+    // Найти все #define
+
+    this->checkDefines();
+}
+
+
 
 bool Parser::parseSem(QXmlStreamReader &xml, QMap<QString, int> &sems)
 {
