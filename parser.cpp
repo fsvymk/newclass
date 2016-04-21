@@ -4,6 +4,9 @@
 #include <QIODevice>
 #include <QMessageBox>
 #include <QApplication>
+#include <QTextStream>
+#include <QDate>
+#include <QTime>
 
 int Parser::compile(){
     // WiFi b1212556789
@@ -150,15 +153,22 @@ void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
         lineBase += j + 1;
 
         // Разбиваем шаг на составляющие
-        ThreeParts = Command_ControlBy_Options(step, line + lineInner);
+        //ThreeParts = Command_ControlBy_Options(step, line + lineInner); // DEPRECATED
+
+        /* // DEPRECATED 20.04.2016
         parseFragment(ThreeParts[0], globalStepNumber, sems, line + lineInner + __CommandLine);
         parseFragment(ThreeParts[1], globalStepNumber, sems, line + lineInner + __ControlByLine);
         parseFragment(ThreeParts[2], globalStepNumber, sems, line + lineInner + __OptionsLine);
 
+        */
         //ThreeParts = TrueThreeParts(step, line+lineInner);
     }
 
 }
+
+void Parser::pe(QString str){
+
+};
 
 void Parser::splitBlocks(QString code)
 {
@@ -211,7 +221,7 @@ void Parser::splitBlocks(QString code)
 
         if(i<0)
         {
-            saveLogs();
+            saveLogs("0","NULL");
             //rb("GlobalResult = ");
             // вывод готового пакета данных.
             //rb(globalResult.toHex());
@@ -255,4 +265,58 @@ void Parser::splitBlocks(QString code)
         parseBlock(block, globalSems, line);
    }
     // сюда код лучше не вставлять т.к. выход из цикла - сразу return;
+}
+
+int Parser::whatLine(QString text, int position)
+{
+    text = text.left(position);
+    return text.count("\n"); // т.к. перед первой строкой нет перевода строки, но это уже одна строка.
+}
+
+void Parser::temporary_green()
+{
+
+}
+
+void Parser::saveLogs(QString code, QString result)
+{
+    QString fileName1 = "log_result.txt";
+    QString fileName2 = "log_errors.txt";
+
+    //QString log1 = ui->parser_codeEditor->toPlainText();
+    //QString log2 = ui->PARSER_TEXT_RESULT->toPlainText();
+
+    QString log1 = code;
+    QString log2 = result;
+
+    log1.replace("\n","\r\n");
+    log2.replace("\n","\r\n");
+
+    QFile file1(fileName1);
+    QFile file2(fileName2);
+
+    QFile::OpenMode FileMode1 = QIODevice::WriteOnly;
+    QFile::OpenMode FileMode2 = QIODevice::WriteOnly;
+
+    if(file1.exists(fileName1)) FileMode1 = QIODevice::Append;
+    if(file2.exists(fileName2)) FileMode2 = QIODevice::Append;
+
+    file1.open(FileMode1);
+    file2.open(FileMode2);
+
+    QTextStream stream1(&file1);
+    QTextStream stream2(&file2);
+
+    QDate date = QDate::currentDate();
+    QTime time = QTime::currentTime();
+    QString date_str = date.toString() + " " + time.toString();
+
+    stream1 << "\r\n\r\n##### " + date_str + " #####\r\n";
+    stream2 << "\r\n\r\n===== " + date_str + " =====\r\n";
+
+    stream1 << log1;
+    stream2 << log2;
+
+    file1.close();
+    file2.close();
 }
