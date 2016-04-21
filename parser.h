@@ -15,9 +15,14 @@ public:
     QStringList errors;
 
     void        pe(QString str);    // print error
+    void        addIncludeFile(QString filename);
+
     QString     allErrors();
 
 private:
+    QStringList includeFiles;   // Имена файлов
+    QStringList includes;       // Содержимое инклудов, независимо от происхождения
+
     QStringList strings;         // Все строки текущего блока
     QStringList Blocks;          // Все блоки
 

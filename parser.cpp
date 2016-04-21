@@ -11,6 +11,17 @@
 int Parser::compile(){
     // WiFi b1212556789
     return -1;
+
+    // Подключить все инклуды по списку
+
+
+
+    // Найти все #define
+}
+
+void Parser::addIncludeFile(QString filename){
+    if(!this->includeFiles.contains(filename,Qt::CaseSensitive))
+    this->includeFiles.append(filename);
 }
 
 bool Parser::parseSem(QXmlStreamReader &xml, QMap<QString, int> &sems)
