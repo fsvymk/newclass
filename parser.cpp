@@ -8,7 +8,7 @@
 #include <QDate>
 #include <QTime>
 
-int Parser::checkDefines(QString str){
+int Parser::checkDefines(QString *str){
 
     QRegExp QR("[S|s]tep\\d+\\s");
     QR.setMinimal(true);
@@ -17,14 +17,21 @@ int Parser::checkDefines(QString str){
     {
         int i = QR.indexIn(str);
         if(i<0) return -1;
+
+        lineInner = whatLine(str_copy, lineBase + i);   // линия внутри блока
+        if(lineBase == 0) lineBase = i;                 // только в первом проходе, чтобы Block name{ попали сюда
+
+        StepArgs = QR.cap(0);
+        str = str.right(str.length() - StepArgs.length());
     }
 
     return 0;
 }
 
-int Parser::checkVariables(){
+int Parser::checkVariables(QString *str){
     int varCount = 0;
     return varCount;
+
 }
 
 void Parser::addIncludeFile(QString filename){
@@ -36,6 +43,8 @@ int Parser::compile(){
     // WiFi b1212556789
     return -1;
 
+    QString *script = &this->script;
+
     // Подключить все инклуды по списку
 
     this->addIncludeFile("definitions.h");
@@ -43,7 +52,11 @@ int Parser::compile(){
 
     // Найти все #define
 
-    int cDr = this->checkDefines("");
+    int cDr = this->checkDefines(script);
+
+    // Составить таблицу переменных.
+
+    int cVr = this->checkVariables(script);
 }
 
 

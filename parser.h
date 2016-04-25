@@ -27,8 +27,8 @@ private:
     QStringList strings;         // Все строки текущего блока
     QStringList Blocks;          // Все блоки
 
-    int         checkDefines(QString str);
-    int         checkVariables();
+    int         checkDefines(QString *str);
+    int         checkVariables(QString *str);
 
     bool        parseSem(QXmlStreamReader &xml, QMap<QString, int> &sems);
     QString     displaySems(QMap<QString, int> &sems);
