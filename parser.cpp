@@ -11,12 +11,17 @@
 int Parser::checkDefines(QString *str){
 
     QString script = *str;
+    QString StepArgs;
 
     QRegExp QR("[S|s]tep\\d+\\s");
     QR.setMinimal(true);
 
     while(1==1) // Поиск
     {
+
+
+
+
         int i = QR.indexIn(script);
         if(i<0) return -1;
 
@@ -26,7 +31,7 @@ int Parser::checkDefines(QString *str){
         */
 
         StepArgs = QR.cap(0);
-        str = str.right(str.length() - StepArgs.length());
+        script = script.right(script.length() - StepArgs.length());
     }
 
     return 0;
@@ -45,7 +50,9 @@ void Parser::addIncludeFile(QString filename){
 
 int Parser::compile(){
     // WiFi b1212556789
-    return -1;
+
+
+    //return -1;
 
     QString *script = &this->script;
 
