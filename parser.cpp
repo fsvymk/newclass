@@ -10,16 +10,20 @@
 
 int Parser::checkDefines(QString *str){
 
+    QString script = *str;
+
     QRegExp QR("[S|s]tep\\d+\\s");
     QR.setMinimal(true);
 
     while(1==1) // Поиск
     {
-        int i = QR.indexIn(str);
+        int i = QR.indexIn(script);
         if(i<0) return -1;
 
+        /*
         lineInner = whatLine(str_copy, lineBase + i);   // линия внутри блока
         if(lineBase == 0) lineBase = i;                 // только в первом проходе, чтобы Block name{ попали сюда
+        */
 
         StepArgs = QR.cap(0);
         str = str.right(str.length() - StepArgs.length());
@@ -145,7 +149,7 @@ void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
     //b(Block);
     //b("\r\n\r\n\r\n\r\n\r\n");
 
-    QString str = Block; // вот! всегдя нужно нажимать Crtl+Mouse чтобы понять где объявлена переменная.
+    QString str = Block;
     QString str_copy = str; // тот же принцип что и в предыдущей функции
 
     QRegExp QR("[S|s]tep\\d+\\s");
