@@ -8,7 +8,17 @@
 #include <QDate>
 #include <QTime>
 
-int Parser::checkDefines(){
+int Parser::checkDefines(QString str){
+
+    QRegExp QR("[S|s]tep\\d+\\s");
+    QR.setMinimal(true);
+
+    while(1==1) // Поиск
+    {
+        int i = QR.indexIn(str);
+        if(i<0) return -1;
+    }
+
     return 0;
 }
 
@@ -33,7 +43,7 @@ int Parser::compile(){
 
     // Найти все #define
 
-    this->checkDefines();
+    int cDr = this->checkDefines("");
 }
 
 
