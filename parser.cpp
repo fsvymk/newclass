@@ -19,9 +19,6 @@ int Parser::checkDefines(QString *str){
     while(1==1) // Поиск
     {
 
-
-
-
         int i = QR.indexIn(script);
         if(i<0) return -1;
 
