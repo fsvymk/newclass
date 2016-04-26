@@ -8,6 +8,9 @@
 #include <QDate>
 #include <QTime>
 
+#include "vartypes.h"
+
+
 int Parser::checkDefines(QString *str){
 
     QString script = *str;
@@ -38,8 +41,19 @@ int Parser::checkDefines(QString *str){
 
 int Parser::checkVariables(QString *str){
     int varCount = 0;
-    return varCount;
 
+    VarTypes VT;
+
+    QRegExp rx("(\\d+)");
+    QStringList list;
+    int pos = 0;
+
+    while ((pos = rx.indexIn(*str, pos)) != -1) {
+         list << rx.cap(1);
+         pos += rx.matchedLength();
+    }
+
+    return varCount;
 }
 
 void Parser::addIncludeFile(QString filename){
@@ -62,7 +76,7 @@ int Parser::compile(){
 
     // Найти все #define
 
-    int cDr = this->checkDefines(script);
+    //int cDr = this->checkDefines(script);
 
     // Составить таблицу переменных.
 

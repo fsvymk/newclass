@@ -14,9 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    parser.cpp
+    parser.cpp \
+    analize.cpp \
+    vartypes.cpp
 
 HEADERS  += mainwindow.h \
-    parser.h
+    parser.h \
+    analize.h \
+    vartypes.h
 
 FORMS    += mainwindow.ui
