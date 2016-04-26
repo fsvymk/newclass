@@ -14,6 +14,9 @@ public:
     QByteArray  byteCode;
     QStringList errors;
 
+    QStringList constants;
+    QStringList values;
+
     void        pe(QString str);    // print error
 
     void        addIncludeFile(QString filename);
