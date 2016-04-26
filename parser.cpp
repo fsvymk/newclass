@@ -14,21 +14,13 @@ int Parser::checkDefines(QString *str){
     QString StepArgs;
 
     //QRegExp QR("[D|d]efine[\\s]+\\w+");
-    QRegExp QR("#[D|d]efine[\\s]+([\\w]+)[\\s]+([\\w|\\d]+)");
+    QRegExp QR("#[D|d]efine[\\s]+([\\w]+)[\\s]+([\\w|\\d]+)[\\n|\\;]");
     QR.setMinimal(true);
 
     while(1==1) // Поиск
     {
-
         int i = QR.indexIn(script);
-
         if(i<0) return -1;
-
-        /*
-        lineInner = whatLine(str_copy, lineBase + i);   // линия внутри блока
-        if(lineBase == 0) lineBase = i;                 // только в первом проходе, чтобы Block name{ попали сюда
-        */
-
         StepArgs = QR.cap(0);
         this->constants.append(QR.cap(1));
         this->values.append(QR.cap(2));
