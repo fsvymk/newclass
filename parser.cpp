@@ -30,6 +30,8 @@ int Parser::checkDefines(QString *str){
         */
 
         StepArgs = QR.cap(0);
+        QString constant = QR.cap(1);
+        QString value    = QR.cap(2);
         this->errors.append(StepArgs);
         script = script.right(script.length() - StepArgs.length());
     }
