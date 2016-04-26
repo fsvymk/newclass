@@ -14,7 +14,7 @@ int Parser::checkDefines(QString *str){
     QString StepArgs;
 
     //QRegExp QR("[D|d]efine[\\s]+\\w+");
-    QRegExp QR("#[D|d]efine[\\s]+([\\w]+)[\\s]+([\\w]+)");
+    QRegExp QR("#[D|d]efine[\\s]+([\\w]+)[\\s]+([\\w|\\d]+)");
     QR.setMinimal(true);
 
     while(1==1) // Поиск
