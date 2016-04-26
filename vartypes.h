@@ -8,6 +8,7 @@ class VarTypes
 public:
     VarTypes();
     QStringList types;
+    QString getRegExpQueue();
 };
 
 #endif // VARTYPES_H
