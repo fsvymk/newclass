@@ -1,0 +1,30 @@
+#define C 202
+#define E 210
+#define S 220
+#define ML 168
+#define CLS 219
+
+#include <stdio>
+#include <iostream.h>
+
+using namespace std;
+
+int main(){
+	A = 2;
+	
+	long int B = 100 + A;
+	
+	C = A/B;
+	
+	D = -1 * C;
+	
+	if(D==8){
+				A = 2;
+			
+			long int B = 100 + A;
+			
+			C = A/B;
+			
+			D = -1 * C;
+	}
+}

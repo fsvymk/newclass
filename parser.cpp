@@ -13,13 +13,15 @@ int Parser::checkDefines(QString *str){
     QString script = *str;
     QString StepArgs;
 
-    QRegExp QR("[S|s]tep\\d+\\s");
+    //QRegExp QR("[D|d]efine[\\s]+\\w+");
+    QRegExp QR("#[D|d]efine[\\s]+([\\w]+)[\\s]+([\\w]+)");
     QR.setMinimal(true);
 
     while(1==1) // Поиск
     {
 
         int i = QR.indexIn(script);
+
         if(i<0) return -1;
 
         /*
@@ -28,6 +30,7 @@ int Parser::checkDefines(QString *str){
         */
 
         StepArgs = QR.cap(0);
+        this->errors.append(StepArgs);
         script = script.right(script.length() - StepArgs.length());
     }
 
