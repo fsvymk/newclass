@@ -13,18 +13,23 @@ int Parser::checkDefines(QString *str){
     QString script = *str;
     QString StepArgs;
 
-    //QRegExp QR("[D|d]efine[\\s]+\\w+");
     QRegExp QR("#[D|d]efine[\\s]+([\\w]+)[\\s]+([\\w|\\d]+)[\\n|\\;]");
     QR.setMinimal(true);
 
-    while(1==1) // Поиск
+    while(1==1)
     {
         int i = QR.indexIn(script);
         if(i<0) return -1;
         StepArgs = QR.cap(0);
         this->constants.append(QR.cap(1));
+
+        /*
         this->values.append(QR.cap(2));
         this->errors.append(StepArgs);
+        */ //deprecated
+
+        this->defines.insert(QR.cap(1),QR.cap(2));
+
         script = script.right(script.length() - StepArgs.length());
     }
 

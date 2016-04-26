@@ -4,6 +4,7 @@
 #include "qstring.h"
 #include "QStringList"
 #include <QMap>
+#include <QHash>
 #include <QXmlStreamReader>
 
 class Parser{
@@ -14,8 +15,10 @@ public:
     QByteArray  byteCode;
     QStringList errors;
 
-    QStringList constants;
-    QStringList values;
+    QStringList constants;  // deprecated
+    QStringList values;     // deprecated
+
+    QHash <QString, QString> defines;
 
     void        pe(QString str);    // print error
 
