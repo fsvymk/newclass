@@ -8,13 +8,39 @@
 #include <QDate>
 #include <QTime>
 
-int Parser::checkDefines(){
+int Parser::checkDefines(QString *str){
+
+    QString script = *str;
+    QString StepArgs;
+
+    QRegExp QR("[S|s]tep\\d+\\s");
+    QR.setMinimal(true);
+
+    while(1==1) // Поиск
+    {
+
+
+
+
+        int i = QR.indexIn(script);
+        if(i<0) return -1;
+
+        /*
+        lineInner = whatLine(str_copy, lineBase + i);   // линия внутри блока
+        if(lineBase == 0) lineBase = i;                 // только в первом проходе, чтобы Block name{ попали сюда
+        */
+
+        StepArgs = QR.cap(0);
+        script = script.right(script.length() - StepArgs.length());
+    }
+
     return 0;
 }
 
-int Parser::checkVariables(){
+int Parser::checkVariables(QString *str){
     int varCount = 0;
     return varCount;
+
 }
 
 void Parser::addIncludeFile(QString filename){
@@ -24,7 +50,11 @@ void Parser::addIncludeFile(QString filename){
 
 int Parser::compile(){
     // WiFi b1212556789
-    return -1;
+
+
+    //return -1;
+
+    QString *script = &this->script;
 
     // Подключить все инклуды по списку
 
@@ -33,7 +63,11 @@ int Parser::compile(){
 
     // Найти все #define
 
-    this->checkDefines();
+    int cDr = this->checkDefines(script);
+
+    // Составить таблицу переменных.
+
+    int cVr = this->checkVariables(script);
 }
 
 
@@ -122,7 +156,7 @@ void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
     //b(Block);
     //b("\r\n\r\n\r\n\r\n\r\n");
 
-    QString str = Block; // вот! всегдя нужно нажимать Crtl+Mouse чтобы понять где объявлена переменная.
+    QString str = Block;
     QString str_copy = str; // тот же принцип что и в предыдущей функции
 
     QRegExp QR("[S|s]tep\\d+\\s");
