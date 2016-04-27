@@ -44,7 +44,7 @@ int Parser::checkVariables(QString *str){
 
     VarTypes VT;
 
-    QRegExp rx(VT.getRegExpQueue()+"(\\d+)");
+    QRegExp rx(VT.getRegExpQueue()+"[\\s+](\\w+)");
     QStringList list;
     int pos = 0;
 
@@ -82,6 +82,8 @@ int Parser::compile(){
     // Составить таблицу переменных.
 
     int cVr = this->checkVariables(script);
+
+
 }
 
 
