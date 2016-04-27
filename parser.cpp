@@ -44,13 +44,14 @@ int Parser::checkVariables(QString *str){
 
     VarTypes VT;
 
-    QRegExp rx("(\\d+)");
+    QRegExp rx(VT.getRegExpQueue()+"(\\d+)");
     QStringList list;
     int pos = 0;
 
     while ((pos = rx.indexIn(*str, pos)) != -1) {
          list << rx.cap(1);
          pos += rx.matchedLength();
+
     }
 
     return varCount;
