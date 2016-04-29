@@ -16,11 +16,13 @@ int Parser::checkDefines(QString *str){
     QString script = *str;
     QString StepArgs;
 
-    QRegExp QR("#[D|d]efine[\\s]+([\\w]+)[\\s]+([\\w|\\d]+)[\\n|\\;]");
+    QRegExp QR("#[D|d]efine[\\s]+([\\w]+)[\\s]+([\\w|\\d]+)");
     QR.setMinimal(true);
 
     while(1==1)
     {
+
+
         int i = QR.indexIn(script);
         if(i<0) return -1;
         StepArgs = QR.cap(0);
@@ -77,7 +79,7 @@ int Parser::compile(){
 
     // Найти все #define
 
-    //int cDr = this->checkDefines(script);
+    int cDr = this->checkDefines(script);
 
     // Составить таблицу переменных.
 
