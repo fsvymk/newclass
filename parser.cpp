@@ -10,19 +10,14 @@
 
 #include "vartypes.h"
 
-
 int Parser::checkDefines(QString *str){
-
     QString script = *str;
     QString StepArgs;
-
     QRegExp QR("#[D|d]efine[\\s]+([\\w]+)[\\s]+([\\w|\\d]+)");
     QR.setMinimal(true);
 
     while(1==1)
     {
-
-
         int i = QR.indexIn(script);
         if(i<0) return -1;
         StepArgs = QR.cap(0);
@@ -31,13 +26,12 @@ int Parser::checkDefines(QString *str){
         /*
         this->values.append(QR.cap(2));
         this->errors.append(StepArgs);
-        */ //deprecated
+        */
+        //deprecated
 
         this->defines.insert(QR.cap(1),QR.cap(2));
-
         script = script.right(script.length() - StepArgs.length());
     }
-
     return 0;
 }
 
@@ -53,9 +47,7 @@ int Parser::checkVariables(QString *str){
     while ((pos = rx.indexIn(*str, pos)) != -1) {
          list << rx.cap(1);
          pos += rx.matchedLength();
-
     }
-
     return varCount;
 }
 
@@ -67,25 +59,18 @@ void Parser::addIncludeFile(QString filename){
 int Parser::compile(){
     // WiFi b1212556789
 
-
     //return -1;
-
     QString *script = &this->script;
 
     // Подключить все инклуды по списку
-
     this->addIncludeFile("definitions.h");
     this->addIncludeFile("project1.h");
 
     // Найти все #define
-
     int cDr = this->checkDefines(script);
 
     // Составить таблицу переменных.
-
     int cVr = this->checkVariables(script);
-
-
 }
 
 
@@ -339,7 +324,10 @@ void Parser::splitBlocks(QString code)
         lineBase += j;
         // и отправим содержимое в следующую функцию
 
-        parseBlock(block, globalSems, line);
+        // Попробуем вместо вызова метода ParseBlock записывать блок в контейнер
+        // parseBlock(block, globalSems, line);
+
+        this->Blocks.append(block);
    }
     // сюда код лучше не вставлять т.к. выход из цикла - сразу return;
 }
