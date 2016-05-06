@@ -50,9 +50,32 @@ HW_SEQUENCE (HW_SEQ_MKT_2) {
 				
 				
 				
-#define IP1_UPDATE EVENT_L00				
+#define IP1_UPDATE EVENT_L00	
+
+module  (  KPA_IP1  ,  SEQ_CTRL_ROOT    )       {
+
+
+
+
+	procedure ( IP1_UPDATE) {			
+		A := Ctrl;		
+		Ctrl := A &amp; 0xFFFE;		
+		rg[11] := Vx + dVx;		
+		rg[10] := Vx - dVx;		
+		rg[1] := 0xA710;		
+		Ctrl := 0x0002 | iif ( A &amp; 0x0020, A | 0x8000, A);		
+	}
+}
+
+module(KPA_IP2, HW_SEQ_CTRL){VAR_EVENTS{Ctrl ::: IP1_UPDATE}}
+
+module	(	KPA_IP3	, 		 HW_CTRL_ROOT	)	 {	
+	uword Vx : rg:7, dVx:rg:8;			
+	uword Ctrl:port:0;			
+	word A, B, C;			
+}
 				
-module (KPA_IP1, HW_SEQ_CTRL_ROOT) {				
+module (KPA_IP4, HW_SEQ_CTRL_ROOT) {				
 	uword Vx : rg:7, dVx:rg:8;			
 	uword Ctrl:port:0;			
 	word A, B, C;			
@@ -88,7 +111,8 @@ module (KPA_IP1, HW_SEQ_CTRL_ROOT) {
 		}		
 		debug_prnt (&quot;Module IP1 was run at %02d:%02d&quot;, m_pos, m_channel);		
 	}			
-}		</string>
+}				
+</string>
       </property>
      </widget>
     </item>

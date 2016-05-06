@@ -244,59 +244,30 @@ void Parser::splitBlocks(QString code)
     }
 
     QByteArray BlockResult;
-    //QRegExp Block("module[\\s+](\\w+)",Qt::CaseInsensitive);
     QRegExp Block("module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)");
     int i = 0;
-
-    QString blockNameAll;
-    QStringList blockNameParts;
     QString blockName;
-
     QChar qc;
 
-    int lineBase = 0;
-    int line = 0;
-
+    int     lineBase = 0;
+    int     line     = 0;
     QString block;
 
     while(1==1)
     {
-        BlockResult.clear();
-        i = Block.indexIn(str);
+        i = Block.indexIn(str);if(i<0)return;
 
         line = whatLine(str_copy, lineBase + i) + 1;
-
-        if(i<0)
-        {
-            saveLogs("0","NULL");
-            //rb("GlobalResult = ");
-            // вывод готового пакета данных.
-            //rb(globalResult.toHex());
-            return;
-        }
-
-        blockNameAll = Block.cap(0);
-        blockNameParts = blockNameAll.split(" ");
-        blockName = blockNameParts[1];
-        //rb("block Name = " + blockName);
-
-        BlockResult += (char)0; // Block sem code
-        BlockResult += blockName;
-
-        while (BlockResult.length() < 32){
-            BlockResult += (char)0;
-        }
-
-        //rb("BL = " + BlockResult.toHex());
-        globalResult += BlockResult;
-
-
+        blockName = Block.cap(1);
         int j = str.indexOf('{',i);
 
         qc = str[j];
 
         int bl=1;
         int br=0;
+
+        // когда значения сравняются, это означает что
+        // поиск дошел до закрывающей фигурной скобки модуля
 
         while(bl != br)
         {
@@ -305,7 +276,9 @@ void Parser::splitBlocks(QString code)
             if(qc=='{') bl++;
             if(qc=='}') br++;
         }
+
         block = str.mid(i,j-i);
+
         str = str.right(str.length()-j);
         lineBase += j;
         // и отправим содержимое в следующую функцию
