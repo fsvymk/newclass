@@ -24,3 +24,5 @@ HEADERS  += mainwindow.h \
     vartypes.h
 
 FORMS    += mainwindow.ui
+
+QMAKE_CXXFLAGS += -save-temps

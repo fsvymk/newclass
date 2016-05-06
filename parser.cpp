@@ -10,6 +10,8 @@
 
 #include "vartypes.h"
 
+#include "../sid/sid.h"
+
 int Parser::checkDefines(QString *str){
     QString script = *str;
     QString StepArgs;
@@ -121,9 +123,9 @@ void Parser::fetchSems(QString FileName, QMap<QString, int> &sems)
     }
 }
 
-void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
+void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)// all deprecated?
 {
-    // all deprecated?
+
 
     QString str = Block;
     QString str_copy = str;
@@ -250,12 +252,22 @@ void Parser::globalSems(){
     displaySems(globalSems);
 }
 
-void Parser::classify(QString *code, QStringList *result)
+void Parser::classify(QString *code, QHash<QString, QStringList> *result, QString regExp)
 // inherit copypasted code from splitBlocks(..)
-//
 {
+    QStringList allStrings;
+    QRegExp classRE(regExp);
+
     QString str  = *code;
     QString str_copy = str;
+    QString block;
+    QString blockName;
+
+    QChar qc;
+
+    int     i        = 0;
+    int     lineBase = 0;
+    int     line     = 0;
 
     unsigned int BFL = str.count("{");
     unsigned int BFR = str.count("}");
@@ -264,30 +276,18 @@ void Parser::classify(QString *code, QStringList *result)
 
     if(BFL!=BFR){
         pe("Err. 1: Brakes {} are not pair.");
-        return;
-    }
+        return;}
 
     if(BCL!=BCR){
         pe("Err. 2: Brakes () are not pair.");
-        return;
-    }
-
-    QByteArray BlockResult;
-    QRegExp Block("module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)");
-    int i = 0;
-    QString blockName;
-    QChar qc;
-
-    int     lineBase = 0;
-    int     line     = 0;
-    QString block;
+        return;}
 
     while(1==1)
     {
-        i = Block.indexIn(str);if(i<0)return;
+        i = classRE.indexIn(str);if(i<0)return;
 
         line = whatLine(str_copy, lineBase + i) + 1;
-        blockName = Block.cap(1);
+        blockName = classRE.cap(1);
         int j = str.indexOf('{',i);
 
         qc = str[j];
@@ -304,11 +304,17 @@ void Parser::classify(QString *code, QStringList *result)
         }
 
         block = str.mid(i,j-i);
+        allStrings = block.split("\n");
+
+        result->insert(blockName, allStrings); // Here.
+
+
 
         str = str.right(str.length()-j);
         lineBase += j;
-
-    this->Blocks.append(block);
+        /*// deprecated
+        this->Blocks.append(block);//
+        *///
    }
 }
 
@@ -363,6 +369,10 @@ void Parser::saveLogs(QString code, QString result)
     file2.close();
 }
 
+void Parser::init(){
+    this->PARSER_QREGEXP_MODULE = "module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)";
+}
+
 
 int Parser::compile(){
     // WiFi b1212556789
@@ -370,7 +380,9 @@ int Parser::compile(){
     //return -1;
     QString *script = &this->script;
 
-    this->splitBlocks(*script);
+    this->init();
+    //this->splitBlocks(*script); // temporary off
+    this->classify(&this->script, &this->sorted, PARSER_QREGEXP_MODULE);
 
     // Подключить все инклуды по списку
     this->addIncludeFile("definitions.h");

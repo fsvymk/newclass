@@ -26,6 +26,8 @@ public:
 
     QString     allErrors();
 
+    QString PARSER_QREGEXP_MODULE;
+
 private:
     QStringList includeFiles;   // Имена файлов
     QStringList includes;       // Содержимое инклудов, независимо от происхождения
@@ -45,7 +47,7 @@ private:
 
     void        parseBlock(QString Block, QMap<QString,int> &sems, int line);
     void        splitBlocks(QString code);
-    void        classify(QString *code, QStringList *result);
+    void        classify(QString *code, QHash<QString, QStringList> *result, QString regExp);
     void        globalSems();
 
     // some functions for parser
