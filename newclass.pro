@@ -25,7 +25,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-#QMAKE_CFLAGS += -masm-intel -save_temps -L/opt/lib
+QMAKE_CFLAGS += -masm-intel -save_temps -L/opt/lib
 
 DISTFILES += \
     parser.s \
