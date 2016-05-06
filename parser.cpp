@@ -123,6 +123,8 @@ void Parser::fetchSems(QString FileName, QMap<QString, int> &sems)
 
 void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
 {
+    // all deprecated?
+
     QString str = Block;
     QString str_copy = str;
 
@@ -154,7 +156,7 @@ void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
 
         QRStepN.indexIn(StepArgs);
         StepN = QRStepN.cap(0);
-        globalStepNumber = StepN.toInt();
+        //globalStepNumber = StepN.toInt();
 
         int j = str.indexOf('{',i);
 
@@ -184,14 +186,75 @@ void Parser::pe(QString str){
 
 void Parser::splitBlocks(QString code)
 {
-    QMap<QString, int> globalSems;
-    fetchSems(":/config.xml", globalSems);
-    displaySems(globalSems);
-
-
     QString str  = code;
     QString str_copy = str;
 
+    unsigned int BFL = str.count("{");
+    unsigned int BFR = str.count("}");
+    unsigned int BCL = str.count("(");
+    unsigned int BCR = str.count(")");
+
+    if(BFL!=BFR){
+        pe("Err. 1: Brakes {} are not pair.");
+        return;
+    }
+
+    if(BCL!=BCR){
+        pe("Err. 2: Brakes () are not pair.");
+        return;
+    }
+
+    QByteArray BlockResult;
+    QRegExp Block("module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)");
+    int i = 0;
+    QString blockName;
+    QChar qc;
+
+    int     lineBase = 0;
+    int     line     = 0;
+    QString block;
+
+    while(1==1)
+    {
+        i = Block.indexIn(str);if(i<0)return;
+
+        line = whatLine(str_copy, lineBase + i) + 1;
+        blockName = Block.cap(1);
+        int j = str.indexOf('{',i);
+
+        qc = str[j];
+
+        int bl=1;
+        int br=0;
+
+        while(bl != br)
+        {
+            j++;
+            qc = str[j];
+            if(qc=='{') bl++;
+            if(qc=='}') br++;
+        }
+
+        block = str.mid(i,j-i);
+
+        str = str.right(str.length()-j);
+        lineBase += j;
+
+    this->Blocks.append(block);
+   }
+}
+
+void Parser::globalSems(){
+    QMap<QString, int> globalSems;
+    fetchSems(":/config.xml", globalSems);
+    displaySems(globalSems);
+}
+
+void Parser::classify(QString *code, QStringList *result)
+// inherit copypasted code from splitBlocks(..)
+{
+    QString str  = *code;
+    QString str_copy = str;
 
     unsigned int BFL = str.count("{");
     unsigned int BFR = str.count("}");

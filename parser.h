@@ -45,6 +45,8 @@ private:
 
     void        parseBlock(QString Block, QMap<QString,int> &sems, int line);
     void        splitBlocks(QString code);
+    void        classify(QString *code, QStringList *result);
+    void        globalSems();
 
     // some functions for parser
     int         whatLine(QString text, int position);
@@ -55,10 +57,11 @@ private:
     static const int LineSize = 32;
     QStringList BlockNames;
     QByteArray globalResult;
-    int __CommandLine;
+
+    /*int __CommandLine;
     int __ControlByLine;
     int __OptionsLine;
-    int globalStepNumber;
+    int globalStepNumber;*/
 
     //
 
