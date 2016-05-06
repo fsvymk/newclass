@@ -25,4 +25,10 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-QMAKE_CXXFLAGS += -save-temps
+QMAKE_CFLAGS += -masm-intel -save_temps -L/opt/lib
+
+DISTFILES += \
+    parser.s \
+    vartypes.s \
+    main.s \
+    analize.s
