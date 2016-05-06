@@ -56,24 +56,6 @@ void Parser::addIncludeFile(QString filename){
     this->includeFiles.append(filename);
 }
 
-int Parser::compile(){
-    // WiFi b1212556789
-
-    //return -1;
-    QString *script = &this->script;
-
-    // Подключить все инклуды по списку
-    this->addIncludeFile("definitions.h");
-    this->addIncludeFile("project1.h");
-
-    // Найти все #define
-    int cDr = this->checkDefines(script);
-
-    // Составить таблицу переменных.
-    int cVr = this->checkVariables(script);
-}
-
-
 
 bool Parser::parseSem(QXmlStreamReader &xml, QMap<QString, int> &sems)
 {
@@ -246,10 +228,10 @@ void Parser::splitBlocks(QString code)
     QString str_copy = str; // т.к. str будет урезаться в процессе разделения на блоки.
 
     // Проверка парности скобок.
-    int BFL = str.count("{");
-    int BFR = str.count("}");
-    int BCL = str.count("(");
-    int BCR = str.count(")");
+    unsigned int BFL = str.count("{");
+    unsigned int BFR = str.count("}");
+    unsigned int BCL = str.count("(");
+    unsigned int BCR = str.count(")");
 
     if(BFL!=BFR){
         pe("Err. 1: Brakes {} are not pair.");
@@ -262,7 +244,8 @@ void Parser::splitBlocks(QString code)
     }
 
     QByteArray BlockResult;
-    QRegExp Block("Block(\\s+)(\\w+)",Qt::CaseInsensitive);
+    //QRegExp Block("module[\\s+](\\w+)",Qt::CaseInsensitive);
+    QRegExp Block("module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)");
     int i = 0;
 
     QString blockNameAll;
@@ -270,8 +253,10 @@ void Parser::splitBlocks(QString code)
     QString blockName;
 
     QChar qc;
+
     int lineBase = 0;
     int line = 0;
+
     QString block;
 
     while(1==1)
@@ -307,6 +292,7 @@ void Parser::splitBlocks(QString code)
 
 
         int j = str.indexOf('{',i);
+
         qc = str[j];
 
         int bl=1;
@@ -327,7 +313,8 @@ void Parser::splitBlocks(QString code)
         // Попробуем вместо вызова метода ParseBlock записывать блок в контейнер
         // parseBlock(block, globalSems, line);
 
-        this->Blocks.append(block);
+        //this->Blocks.append(block);
+
    }
     // сюда код лучше не вставлять т.к. выход из цикла - сразу return;
 }
@@ -384,4 +371,24 @@ void Parser::saveLogs(QString code, QString result)
 
     file1.close();
     file2.close();
+}
+
+
+int Parser::compile(){
+    // WiFi b1212556789
+
+    //return -1;
+    QString *script = &this->script;
+
+    this->splitBlocks(*script);
+
+    // Подключить все инклуды по списку
+    this->addIncludeFile("definitions.h");
+    this->addIncludeFile("project1.h");
+
+    // Найти все #define
+    int cDr = this->checkDefines(script);
+
+    // Составить таблицу переменных.
+    int cVr = this->checkVariables(script);
 }
