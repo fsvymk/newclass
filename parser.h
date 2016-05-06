@@ -33,6 +33,9 @@ private:
     QStringList strings;         // Все строки текущего блока
     QStringList Blocks;          // Все блоки
 
+    QHash<QString, QStringList>  sorted; // Имя блока - и исходный код построчно
+    QHash<QString, QByteArray> compiled; // Аналогично - имя блока - байткод.
+
     int         checkDefines(QString *str);
     int         checkVariables(QString *str);
 

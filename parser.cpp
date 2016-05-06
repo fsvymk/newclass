@@ -244,9 +244,7 @@ void Parser::splitBlocks(QString code)
         str = str.right(str.length()-j);
         lineBase += j;
 
-
     this->Blocks.append(block);
-
    }
 }
 
