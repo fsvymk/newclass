@@ -12,6 +12,9 @@
 
 #include "../sid/sid.h"
 
+
+# include <QtCore/qatomic_x86.h>
+
 int Parser::checkDefines(QString *str){
     QString script = *str;
     QString StepArgs;
