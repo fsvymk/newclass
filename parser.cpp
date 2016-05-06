@@ -252,6 +252,7 @@ void Parser::globalSems(){
 
 void Parser::classify(QString *code, QStringList *result)
 // inherit copypasted code from splitBlocks(..)
+//
 {
     QString str  = *code;
     QString str_copy = str;
