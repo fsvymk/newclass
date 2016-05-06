@@ -264,6 +264,7 @@ void Parser::classify(QString *code, QHash<QString, QStringList> *result, QStrin
     QString str  = *code;
     QString str_copy = str;
     QString block;
+    QString excess;         // то что находится до регулярки
     QString blockName;
 
     QChar qc;
@@ -385,7 +386,13 @@ int Parser::compile(){
 
     this->init();
     //this->splitBlocks(*script); // temporary off
+
     this->classify(&this->script, &this->sorted, PARSER_QREGEXP_MODULE);
+
+    // теперь код поблочно лежит в контейнере sorted.
+    //
+    // ключ     - название блока
+    // значение - список строк из блока, типа QStringList
 
     // Подключить все инклуды по списку
     this->addIncludeFile("definitions.h");
