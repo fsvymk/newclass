@@ -22,13 +22,6 @@ int Parser::checkDefines(QString *str){
         if(i<0) return -1;
         StepArgs = QR.cap(0);
         this->constants.append(QR.cap(1));
-
-        /*
-        this->values.append(QR.cap(2));
-        this->errors.append(StepArgs);
-        */
-        //deprecated
-
         this->defines.insert(QR.cap(1),QR.cap(2));
         script = script.right(script.length() - StepArgs.length());
     }
@@ -59,7 +52,7 @@ void Parser::addIncludeFile(QString filename){
 
 bool Parser::parseSem(QXmlStreamReader &xml, QMap<QString, int> &sems)
 {
-     //p("MainWindow::parseSem");
+
      if (xml.tokenType() != QXmlStreamReader::StartElement && xml.name() == "sem")
          return false;
      QXmlStreamAttributes attributes = xml.attributes();
@@ -104,12 +97,7 @@ void Parser::fetchSems(QString FileName, QMap<QString, int> &sems)
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
             {
-                    /*
-                        QMessageBox::critical(this,"Load XML File Problem",
-                        "Couldn't open config.xml to load settings for parse",
-                        QMessageBox::Ok);
-                        return;
-                    */
+
             }
 
     QXmlStreamReader xml(&file);
@@ -125,9 +113,7 @@ void Parser::fetchSems(QString FileName, QMap<QString, int> &sems)
                 continue;
             if (xml.name() == "sem"){
                 if (!parseSem(xml, sems)) {
-                   /* QMessageBox::critical(this,"XML File Problem",
-                    "Error parse XML file",
-                    QMessageBox::Ok); */
+
                     return;
                 }
             }
@@ -137,12 +123,8 @@ void Parser::fetchSems(QString FileName, QMap<QString, int> &sems)
 
 void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
 {
-    //b("BLOCK. Line = " + QString::number(line));
-    //b(Block);
-    //b("\r\n\r\n\r\n\r\n\r\n");
-
     QString str = Block;
-    QString str_copy = str; // тот же принцип что и в предыдущей функции
+    QString str_copy = str;
 
     QRegExp QR("[S|s]tep\\d+\\s");
     QR.setMinimal(true);
@@ -154,8 +136,8 @@ void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
     QString step;
     QStringList ThreeParts;
 
-    int lineBase = 0;  // позиция текущего шага из блока (в символах)
-    int lineInner = 0; // линия внутри блока. line - из аргументов функции - линия, с которой начинается Block.
+    int lineBase = 0;
+    int lineInner = 0;
 
     while(1==1)
     {
@@ -163,18 +145,16 @@ void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
         if(i<0) return;
 
 
-        lineInner = whatLine(str_copy, lineBase + i); // линия внутри блока! первая в блоке - нулевая здесь.
-        if(lineBase == 0) lineBase = i; // только в первом проходе, чтобы Block name{ попали сюда...
+        lineInner = whatLine(str_copy, lineBase + i);
+        if(lineBase == 0) lineBase = i;
 
         StepArgs = QR.cap(0);
         str = str.right(str.length() - StepArgs.length());
 
-        // получение номера Step
 
         QRStepN.indexIn(StepArgs);
         StepN = QRStepN.cap(0);
         globalStepNumber = StepN.toInt();
-        //globalResult += globalStepNumber;
 
         int j = str.indexOf('{',i);
 
@@ -191,21 +171,9 @@ void Parser::parseBlock(QString Block, QMap<QString,int> &sems, int line)
             if(qc=='}') br++;
         }
 
-        // Получение одного шага из оставшихся нескольких
         step = str.mid(i,j-i);
         str = str.right(str.length() - j);
         lineBase += j + 1;
-
-        // Разбиваем шаг на составляющие
-        //ThreeParts = Command_ControlBy_Options(step, line + lineInner); // DEPRECATED
-
-        /* // DEPRECATED 20.04.2016
-        parseFragment(ThreeParts[0], globalStepNumber, sems, line + lineInner + __CommandLine);
-        parseFragment(ThreeParts[1], globalStepNumber, sems, line + lineInner + __ControlByLine);
-        parseFragment(ThreeParts[2], globalStepNumber, sems, line + lineInner + __OptionsLine);
-
-        */
-        //ThreeParts = TrueThreeParts(step, line+lineInner);
     }
 
 }
@@ -216,18 +184,15 @@ void Parser::pe(QString str){
 
 void Parser::splitBlocks(QString code)
 {
-    //temporary_green();
-    //ui->PARSER_TEXT_RESULT->clear();
-
     QMap<QString, int> globalSems;
     fetchSems(":/config.xml", globalSems);
     displaySems(globalSems);
 
-    //QString str = ui->parser_codeEditor->toPlainText();
-    QString str  = code;    // из аргумента
-    QString str_copy = str; // т.к. str будет урезаться в процессе разделения на блоки.
 
-    // Проверка парности скобок.
+    QString str  = code;
+    QString str_copy = str;
+
+
     unsigned int BFL = str.count("{");
     unsigned int BFR = str.count("}");
     unsigned int BCL = str.count("(");
@@ -266,9 +231,6 @@ void Parser::splitBlocks(QString code)
         int bl=1;
         int br=0;
 
-        // когда значения сравняются, это означает что
-        // поиск дошел до закрывающей фигурной скобки модуля
-
         while(bl != br)
         {
             j++;
@@ -281,15 +243,11 @@ void Parser::splitBlocks(QString code)
 
         str = str.right(str.length()-j);
         lineBase += j;
-        // и отправим содержимое в следующую функцию
 
-        // Попробуем вместо вызова метода ParseBlock записывать блок в контейнер
-        // parseBlock(block, globalSems, line);
 
-        //this->Blocks.append(block);
+    this->Blocks.append(block);
 
    }
-    // сюда код лучше не вставлять т.к. выход из цикла - сразу return;
 }
 
 int Parser::whatLine(QString text, int position)
@@ -307,9 +265,6 @@ void Parser::saveLogs(QString code, QString result)
 {
     QString fileName1 = "log_result.txt";
     QString fileName2 = "log_errors.txt";
-
-    //QString log1 = ui->parser_codeEditor->toPlainText();
-    //QString log2 = ui->PARSER_TEXT_RESULT->toPlainText();
 
     QString log1 = code;
     QString log2 = result;
