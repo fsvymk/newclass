@@ -27,6 +27,9 @@ public:
     QString     allErrors();
 
     QString PARSER_QREGEXP_MODULE;
+    QString PARSER_QREGEXP_HW_SEQUENCE;
+    QString PARSER_QREGEXP_MSG;
+    QString PARSER_QREGEXP_BIT_ARRAY;
 
 private:
     QStringList includeFiles;   // Имена файлов
@@ -37,6 +40,8 @@ private:
 
     QHash<QString, QStringList>  sorted; // Имя блока - и исходный код построчно
     QHash<QString, QByteArray> compiled; // Аналогично - имя блока - байткод.
+
+    QHash<QString, QStringList> hwSequence;
 
     int         checkDefines(QString *str);
     int         checkVariables(QString *str);

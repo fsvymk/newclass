@@ -375,6 +375,7 @@ void Parser::saveLogs(QString code, QString result)
 
 void Parser::init(){
     this->PARSER_QREGEXP_MODULE = "module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)";
+    this->PARSER_QREGEXP_HW_SEQUENCE = "HW_SEQUENCE[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\)";
 }
 
 
