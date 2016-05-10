@@ -16,12 +16,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     parser.cpp \
     analize.cpp \
-    vartypes.cpp
+    vartypes.cpp \
+    sems.cpp
 
 HEADERS  += mainwindow.h \
     parser.h \
     analize.h \
-    vartypes.h
+    vartypes.h \
+    parserdefs.h \
+    sems.h
 
 FORMS    += mainwindow.ui
 

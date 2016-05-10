@@ -10,6 +10,7 @@
 class Parser{
 public:
     void        init();
+    void        initSems();
     int         compile();
     QString     script;
     QByteArray  byteCode;
@@ -42,6 +43,8 @@ private:
     QHash<QString, QByteArray> compiled; // Аналогично - имя блока - байткод.
 
     QHash<QString, QStringList> hwSequence;
+
+    QMap<QString, int> Sems;        // Семафоры.
 
     int         checkDefines(QString *str);
     int         checkVariables(QString *str);

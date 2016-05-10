@@ -10,8 +10,7 @@
 
 #include "vartypes.h"
 
-#include "../sid/sid.h"
-
+// #include "../sid/sid.h"
 
 # include <QtCore/qatomic_x86.h>
 
@@ -378,6 +377,41 @@ void Parser::init(){
     this->PARSER_QREGEXP_HW_SEQUENCE = "HW_SEQUENCE[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\)";
 }
 
+void Parser::initSems(){
+    this->Sems.insert("rotl", 0x01);
+/*
+rotl	0x01
+rotr	0x02
+ashl	0x03
+ashr	0x04
+iif	0x05
+read	0x06
+write	0x07
+write_all	0x08
+write_sel	0x09
+on	0x0A
+off	0x0B
+local_send_event	0x0C
+send_event	0x0D
+send_event_sel	0x0E
+send_event_sync	0x0F
+send_event_sync_sel	0x10
+send_event_all	0x11
+end_proc	0x12
+delay	0x13
+make_dialog	0x14
+print	0x15
+telemetry	0x16
+telemetry_reset	0x17
+check_hw_connection 	0x18
+break	0x19
+continue	0x20
+transmitt	0x21
+receive	0x22
+debug_prnt	0x23
+*/
+}
+
 
 int Parser::compile(){
     // WiFi b1212556789
@@ -389,6 +423,7 @@ int Parser::compile(){
     //this->splitBlocks(*script); // temporary off
 
     this->classify(&this->script, &this->sorted, PARSER_QREGEXP_MODULE);
+    this->classify(&this->script, &this->sorted, PARSER_QREGEXP_HW_SEQUENCE);
 
     // теперь код поблочно лежит в контейнере sorted.
     //
@@ -404,4 +439,5 @@ int Parser::compile(){
 
     // Составить таблицу переменных.
     int cVr = this->checkVariables(script);
+
 }
