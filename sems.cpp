@@ -50,7 +50,6 @@ void Sems::initOps(){
     this->Opeartion.insert(">",	0x36);
     this->Opeartion.insert(":=",	0xE1);
     this->Opeartion.insert("pseudo", 0xF1); // псевдо - операция
-
 }
 
 void Sems::initErrors(){
@@ -74,11 +73,12 @@ void Sems::initPreDefs(){
     this->predefinedVars.insert("m_channel",	0xF5);
     this->predefinedVars.insert("__zero",       0xFE);
     this->predefinedVars.insert("__FF",         0xFF);
-
 }
-
 
 Sems::Sems()
 {
-
+    semsInitDefault();
+    initOps();
+    initErrors();
+    initPreDefs();
 }

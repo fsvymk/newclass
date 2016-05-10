@@ -44,7 +44,7 @@ private:
 
     QHash<QString, QStringList> hwSequence;
 
-    QMap<QString, int> Sems;        // Семафоры.
+    QMap<QString, int> parserSems;        // Семафоры.
 
     int         checkDefines(QString *str);
     int         checkVariables(QString *str);

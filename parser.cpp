@@ -9,6 +9,7 @@
 #include <QTime>
 
 #include "vartypes.h"
+#include "sems.h"
 
 // #include "../sid/sid.h"
 
@@ -378,7 +379,7 @@ void Parser::init(){
 }
 
 void Parser::initSems(){
-    this->Sems.insert("rotl", 0x01);
+    this->parserSems.insert("rotl", 0x01);
 /*
 rotl	0x01
 rotr	0x02
@@ -415,6 +416,8 @@ debug_prnt	0x23
 
 int Parser::compile(){
     // WiFi b1212556789
+
+    Sems semSoup;
 
     //return -1;
     QString *script = &this->script;
