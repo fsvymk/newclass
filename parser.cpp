@@ -49,6 +49,18 @@ int Parser::checkVariables(QString *str){
     return varCount;
 }
 
+QString Parser::QStringList_print(QStringList list)
+{
+    int cnt = 0;
+    QString result;
+    QStringList::const_iterator it;
+    for(it=list.constBegin(); it!=list.constEnd(); ++it)
+    {
+        result.append("\nlist["+QString::number(cnt)+"]");
+        result.append("\n" + *it);
+        cnt++;
+    }
+}
 void Parser::addIncludeFile(QString filename){
     if(!this->includeFiles.contains(filename,Qt::CaseSensitive))
     this->includeFiles.append(filename);
@@ -380,37 +392,37 @@ void Parser::init(){
 
 void Parser::initSems(){
     this->parserSems.insert("rotl", 0x01);
-/*
-rotl	0x01
-rotr	0x02
-ashl	0x03
-ashr	0x04
-iif	0x05
-read	0x06
-write	0x07
-write_all	0x08
-write_sel	0x09
-on	0x0A
-off	0x0B
-local_send_event	0x0C
-send_event	0x0D
-send_event_sel	0x0E
-send_event_sync	0x0F
-send_event_sync_sel	0x10
-send_event_all	0x11
-end_proc	0x12
-delay	0x13
-make_dialog	0x14
-print	0x15
-telemetry	0x16
-telemetry_reset	0x17
-check_hw_connection 	0x18
-break	0x19
-continue	0x20
-transmitt	0x21
-receive	0x22
-debug_prnt	0x23
-*/
+
+this->parserSems.insert("rotl",             0x01);
+this->parserSems.insert("rotr",             0x02);
+this->parserSems.insert("ashl",             0x03);
+this->parserSems.insert("ashr",             0x04);
+this->parserSems.insert("iif",              0x05);
+this->parserSems.insert("read",             0x06);
+this->parserSems.insert("write",            0x07);
+this->parserSems.insert("write_all", 		0x08);
+this->parserSems.insert("write_sel", 		0x09);
+this->parserSems.insert("on",               0x0A);
+this->parserSems.insert("off",              0x0B);
+this->parserSems.insert("local_send_event", 0x0C);
+this->parserSems.insert("send_event", 		0x0D);
+this->parserSems.insert("send_event_sel", 	0x0E);
+this->parserSems.insert("send_event_sync", 	0x0F);
+this->parserSems.insert("send_event_sync_sel", 	0x10);
+this->parserSems.insert("send_event_all",   0x11);
+this->parserSems.insert("end_proc", 		0x12);
+this->parserSems.insert("delay",            0x13);
+this->parserSems.insert("make_dialog", 		0x14);
+this->parserSems.insert("prin",             0x15);
+this->parserSems.insert("telemetry", 		0x16);
+this->parserSems.insert("telemetry_reset", 	0x17);
+this->parserSems.insert("check_hw_connection", 	 0x18);
+this->parserSems.insert("break",            0x19);
+this->parserSems.insert("continue",         0x20);
+this->parserSems.insert("transmitt",        0x21);
+this->parserSems.insert("receive",          0x22);
+this->parserSems.insert("debug_prnt",       0x23);
+
 }
 
 

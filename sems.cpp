@@ -34,22 +34,22 @@ void Sems::semsInitDefault()
 }
 
 void Sems::initOps(){
-    this->Opeartion.insert("&",	0x01);
-    this->Opeartion.insert("|",	0x02);
-    this->Opeartion.insert("^",	0x03);
-    this->Opeartion.insert("*",	0x11);
-    this->Opeartion.insert("/",	0x12);
+    this->Opeartion.insert("&",     0x01);
+    this->Opeartion.insert("|",     0x02);
+    this->Opeartion.insert("^",     0x03);
+    this->Opeartion.insert("*",     0x11);
+    this->Opeartion.insert("/",     0x12);
     this->Opeartion.insert("\\",	0x13);
-    this->Opeartion.insert("+",	0x21);
-    this->Opeartion.insert("-",	0x22);
-    this->Opeartion.insert("=",	0x31);
+    this->Opeartion.insert("+",     0x21);
+    this->Opeartion.insert("-",     0x22);
+    this->Opeartion.insert("=",     0x31);
     this->Opeartion.insert("<>",	0x32);
-    this->Opeartion.insert("<",	0x33);
+    this->Opeartion.insert("<",     0x33);
     this->Opeartion.insert("<=",	0x34);
     this->Opeartion.insert(">=",	0x35);
-    this->Opeartion.insert(">",	0x36);
+    this->Opeartion.insert(">",     0x36);
     this->Opeartion.insert(":=",	0xE1);
-    this->Opeartion.insert("pseudo", 0xF1); // псевдо - операция
+    this->Opeartion.insert("pseudo",0xF1); // псевдо - операция
 }
 
 void Sems::initErrors(){
