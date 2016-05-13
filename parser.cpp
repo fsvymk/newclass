@@ -46,7 +46,7 @@ int Parser::checkVariables(QString *str){
          list << rx.cap(1);
          pos += rx.matchedLength();
     }
-    return varCount;
+     return varCount;
 }
 
 QString Parser::QStringList_print(QStringList list)
@@ -266,6 +266,183 @@ void Parser::globalSems(){
     fetchSems(":/config.xml", globalSems);
     displaySems(globalSems);
 }
+
+void Parser::parseFragment(QString text, int StepN, const QMap<QString, int> &sems, int line)
+{
+        QByteArray result;
+
+        result += StepN;
+
+        text.replace("}"," ");
+        text.replace("{"," ");
+        text.replace("\'", "");
+        //text.replace("\‘", "");
+        //text.replace("\’", "");
+
+        text.replace("Command ", "", Qt::CaseInsensitive);
+        //text.replace("Options", "", Qt::CaseInsensitive); // потому что у Options есть код.
+        text.replace("Control_by", "", Qt::CaseInsensitive);
+
+        QStringList lines = text.split("\n");
+
+        for (int i = 0; i < lines.length(); i++)
+        {
+            result += parseLine(lines[i], sems, line);
+        }
+
+        int t = result.length();
+        for(int i=0; i<(LineSize-1-t); i++){
+            result.append((char)0);
+        }
+
+        result.append(line);
+
+        globalResult += result;
+        rr(result.toHex());
+}
+
+QByteArray Parser::parseLine(const QString &text, const QMap<QString, int> &sems, int line)
+{
+    //r("PARSE LINE " + text);
+
+    int i = text.indexOf(' ');
+    QString type = text.mid(0, i);
+    int lastPosition = 0;
+
+    i = text.indexOf('(', lastPosition);
+    QString value = text.mid(lastPosition, i - lastPosition).trimmed();
+    lastPosition = i;
+    i = text.indexOf(')', lastPosition);
+
+    //Текст между скобками
+    QString betweenBrackets =  text.mid(lastPosition+1, i - lastPosition - 1);
+    //Массив чисел
+    QStringList numbers = betweenBrackets.split(",", QString::SkipEmptyParts);
+
+    QByteArray result = processScript(value, numbers, sems, line);
+
+    return result;
+}
+
+QByteArray Parser::processScript(QString value, QStringList numbers, const QMap<QString, int> &sems, int line)
+{
+    //  Самое главное - одному вызову processScript соответствует один вызов parseLine
+    //  смысл функции - конкретную строку превратить в байт-код.
+    //  line - номер линии
+    //  value - команда
+    //  numbers - параметры (если есть)
+    //  sems - всегда одинаковый набор, можно было бы запихнуть это в глобальную область, если не лень.
+
+    QByteArray result;
+    QString SLine = QString::number(line);
+
+    value = value.toLower();
+    //Ищем, есть ли нужный семафор из xml файла
+    if (!sems.contains(value)) // нет такого ключевого слова
+    {
+        int VL = value.length();
+        //int test_options = value.indexOf("options", Qt::CaseInsensitive);
+
+
+        if(VL > 0) // если ключевое слово длинее нуля символов
+        {
+            pe("Err.3 Wrong keyword. " + value + " at line " + SLine); // // + " has not sem. length = " + QString::number(VL));
+        }
+    }
+    else
+    {
+        result.append(sems[value]);
+    }
+
+    //обработка символа *
+      for (int i = 0; i < numbers.size(); i++) {
+        QString number = numbers[i].trimmed();
+            if (number == "*")
+                result += (char)0x19;
+            else {
+                bool ok = false;
+                int e = number.indexOf("=");
+                QString leftPart  = number.left(e).trimmed();
+                QString rightPart = number.right(number.size()-e-1).trimmed();
+
+                QString leftPartSem = "";
+                QString rightPartSem= "";
+
+                if (!sems.contains(leftPart)){
+
+                    leftPartSem += "QDEBUG: erro sedm " + leftPart;
+                }
+                else{
+                    result.append(sems[leftPart]);
+                    leftPartSem += QString::number(sems[leftPart]);
+                }
+
+                if (!sems.contains(rightPart)){
+                    // преобразование правой части параметра в число
+                    result += (char)rightPart.toUInt(&ok);
+                    //rightPartSem += (int)rightPart.toUInt(&ok);
+                }
+                else{
+                    result.append(sems[rightPart]);
+                    //rightPartSem += QString::number(sems[rightPart]);
+                }
+            }
+    }
+
+    return result;
+}
+
+
+QByteArray  compileStr(QString str){
+    QByteArray result;
+
+    // String samples:
+    /*  debug_prnt ("Module IP1 was run at %02d:%02d", m_pos, m_channel);
+
+
+    0x06                                   04/06/08 - длины блока, тут они везде
+0x10	0                   десять - номер строки,   ноль - старший байт (?)
+    67                                  67-я строка
+    06                                     04/06/08
+0x01	0x23                            01 - функция  23 - индекс функции debug_prnt
+    ????                               после чего оставим два байта пустыми
+    0x04                                    4  - длина блока
+0x03	0                                   3  - константа 16bit  0 - старший брат
+Индекс компилятора для текста (16-р)        16-битная константа - индекс (указатель) на текст (В Пилотной версии - 0xFFFF)
+    0x04                                    4 - длина блока
+0x06	0x01                            6 - запятая         1 - счетчик запятых, вот и первая
+    0x04                                    4 длина блока
+0x02	0xF3                            2 - переменная      F3 = одна из системных, от F0..FF
+    0x04                                    4 Длина блока
+0x06	0x02                            6 - запятая         2 - вторая запятая
+    0x04                                    4 ддлина блока
+0x02	0xF5                            2- переменная       F5 системная
+    0x04                                    4 длина блока
+
+0x0E   	0                               E = конец тела функции 0 - старший брат
+
+    0x04
+0x08	0xF1                            8 - операнд         F1 = конец записи (из таблицы) ПСЕВДООПЕРАЦИЯ. ВЫПОЛНИТЬ.
+
+     *
+     *
+     *
+     *
+     *
+
+
+
+
+
+    */
+
+    return result;
+}
+
+QByteArray  compileBlock(QStringList block){
+
+}
+
 
 void Parser::classify(QString *code, QHash<QString, QStringList> *result, QString regExp)
 // inherit copypasted code from splitBlocks(..)
