@@ -9,6 +9,12 @@
 
 class Parser{
 public:
+    //garbage from graphs:
+    void       parseFragment(QString text, int StepN, const QMap<QString, int> &sems, int line);
+    QByteArray parseLine(const QString &text, const QMap<QString, int> &sems, int line);
+    QByteArray processScript(QString value, QStringList numbers, const QMap<QString, int> &sems, int line);
+
+    //Perfect parser:
     void        init();
     void        initSems();
     int         compile();
@@ -27,10 +33,13 @@ public:
 
     QString     allErrors();
 
-    QString PARSER_QREGEXP_MODULE;
-    QString PARSER_QREGEXP_HW_SEQUENCE;
-    QString PARSER_QREGEXP_MSG;
-    QString PARSER_QREGEXP_BIT_ARRAY;
+    QString     PARSER_QREGEXP_MODULE;
+    QString     PARSER_QREGEXP_HW_SEQUENCE;
+    QString     PARSER_QREGEXP_MSG;
+    QString     PARSER_QREGEXP_BIT_ARRAY;
+
+    QByteArray  compileStr(QString str);
+    QByteArray  compileBlock(QStringList block);
 
 private:
     QStringList includeFiles;   // Имена файлов
