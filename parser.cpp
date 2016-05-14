@@ -10,6 +10,7 @@
 
 #include "vartypes.h"
 #include "sems.h"
+#include "atom.h"
 
 #include "mainwindow.h"
 
@@ -498,6 +499,7 @@ QByteArray Parser::compileStr(QString str){
     0x02 (Переменная)	Code
 */
     QHash<QString, QString> Atoms;
+    QList<QString> atomSequence;
 
     QRegExp QRE_SPLIT_STRING("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
     //QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
@@ -511,28 +513,18 @@ QByteArray Parser::compileStr(QString str){
     QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]", Qt::CaseInsensitive);
     QR.setMinimal(false);
     QStringList SL;
-    QHash<int, QStringList> allResult;
 
     int count = 0;
     int pos = 0;
-    int i;
-    int x;
+
 
     QString code = str;
 
     while ((pos = QR.indexIn(code, pos)) != -1) {
-
         ++count;
         pos += QR.matchedLength();
-
-        SL.clear();
-        SL.append(QR.capturedTexts());
-
-        i = 0;
-        x = SL.count();
-
         Atoms.insert(QR.cap(0), QR.cap(1));
-
+        atomSequence.append(QR.cap(0));
     }
     return 0;
 }

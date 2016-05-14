@@ -57,9 +57,6 @@ private:
 
     QHash<QString, QStringList> hwSequence;
 
-
-    QHash<QString, QByteArray> ATOMS; //temporary?
-
     QMap<QString, int> parserSems;        // Семафоры.
 
     int         checkDefines(QString *str);
