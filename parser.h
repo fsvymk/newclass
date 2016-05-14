@@ -38,7 +38,8 @@ public:
     QString     PARSER_QREGEXP_MSG;
     QString     PARSER_QREGEXP_BIT_ARRAY;
 
-    QByteArray  compileStr(QString str);
+    QByteArray  compileAtom(QString atom);
+    QByteArray  splitStr(QString str);
     QByteArray  compileBlock(QStringList block);
 
     // TEST:

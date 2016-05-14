@@ -395,8 +395,15 @@ QByteArray Parser::processScript(QString value, QStringList numbers, const QMap<
     return result;
 }
 
+QByteArray Parser::compileAtom(QString atom){
+    QByteArray result;
 
-QByteArray Parser::compileStr(QString str){
+
+
+    return result;
+}
+
+QByteArray Parser::splitStr(QString str){
     QByteArray result;
 
     // String samples:
@@ -517,13 +524,10 @@ QByteArray Parser::compileStr(QString str){
     int count = 0;
     int pos = 0;
 
-
-    QString code = str;
-
-    while ((pos = QR.indexIn(code, pos)) != -1) {
+    while ((pos = QR.indexIn(str, pos)) != -1) {
         ++count;
         pos += QR.matchedLength();
-        Atoms.insert(QR.cap(0), QR.cap(1));
+        //Atoms.insert(QR.cap(0), QR.cap(1));
         atomSequence.append(QR.cap(0));
     }
     return 0;
@@ -696,7 +700,7 @@ this->parserSems.insert("debug_prnt",       0x23);
 
 void Parser::testCase01(){
     QString test =  "debug_prnt (\"Module IP1 was run at %02d:%02d\", m_pos, m_channel);";
-    QByteArray res = compileStr(test);
+    QByteArray res = splitStr(test);
 
 
 }
