@@ -398,7 +398,11 @@ QByteArray Parser::processScript(QString value, QStringList numbers, const QMap<
 QByteArray Parser::compileAtom(QString atom){
     QByteArray result;
 
+    //QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
 
+    QRegExp QRE_FUNCTION("[\w]+");
+    QRegExp QRE_COMMA("\,");
+    QRegExp QRE_TEXT("\"([\w\s\d]+)\"");
 
     return result;
 }
@@ -505,30 +509,27 @@ void Parser::splitStr(QString str, QList<QString> &atoms){
     0x04 (длина блока)
     0x02 (Переменная)	Code
 */
-    QHash<QString, QString> Atoms;
-    QList<QString> atomSequence;
+    //QHash<QString, QString> Atoms;
+    //QList<QString> atomSequence;
 
-    QRegExp QRE_SPLIT_STRING("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
-    //QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
-
-    QRegExp QRE_FUNCTION("[\w]+");
-    QRegExp QRE_COMMA("\,");
-    QRegExp QRE_TEXT("\"([\w\s\d]+)\"");
-
+   // QRegExp QRE_SPLIT_STRING("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
     if(str.length()<1) return; // со нулевой строкой нечего делать
 
     QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]", Qt::CaseInsensitive);
     QR.setMinimal(false);
-    QStringList SL;
+    //QStringList SL;
 
-    int count = 0;
+    //int count = 0;
     int pos = 0;
 
     while ((pos = QR.indexIn(str, pos)) != -1) {
-        ++count;
+        //++count;
         pos += QR.matchedLength();
         //Atoms.insert(QR.cap(0), QR.cap(1));
-        atomSequence.append(QR.cap(0));
+        //atomSequence.append(QR.cap(0));
+        atoms.append(QR.cap(0));
+
+
     }
     return; //void;
 }
