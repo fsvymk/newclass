@@ -39,7 +39,7 @@ public:
     QString     PARSER_QREGEXP_BIT_ARRAY;
 
     QByteArray  compileAtom(QString atom);
-    QByteArray  splitStr(QString str);
+    void        splitStr(QString str, QList<QString> &atoms);
     QByteArray  compileBlock(QStringList block);
 
     // TEST:

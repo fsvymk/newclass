@@ -403,7 +403,7 @@ QByteArray Parser::compileAtom(QString atom){
     return result;
 }
 
-QByteArray Parser::splitStr(QString str){
+void Parser::splitStr(QString str, QList<QString> &atoms){
     QByteArray result;
 
     // String samples:
@@ -515,7 +515,7 @@ QByteArray Parser::splitStr(QString str){
     QRegExp QRE_COMMA("\,");
     QRegExp QRE_TEXT("\"([\w\s\d]+)\"");
 
-    if(str.length()<1) return ""; // со нулевой строкой нечего делать
+    if(str.length()<1) return; // со нулевой строкой нечего делать
 
     QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]", Qt::CaseInsensitive);
     QR.setMinimal(false);
@@ -530,7 +530,7 @@ QByteArray Parser::splitStr(QString str){
         //Atoms.insert(QR.cap(0), QR.cap(1));
         atomSequence.append(QR.cap(0));
     }
-    return 0;
+    return; //void;
 }
 
 QByteArray  compileBlock(QStringList &block){
@@ -700,9 +700,8 @@ this->parserSems.insert("debug_prnt",       0x23);
 
 void Parser::testCase01(){
     QString test =  "debug_prnt (\"Module IP1 was run at %02d:%02d\", m_pos, m_channel);";
-    QByteArray res = splitStr(test);
-
-
+    QList<QString> testResult;
+    splitStr(test, testResult);
 }
 
 
