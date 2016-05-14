@@ -41,6 +41,10 @@ public:
     QByteArray  compileStr(QString str);
     QByteArray  compileBlock(QStringList block);
 
+    // TEST:
+
+    void testCase01();
+
 private:
     QStringList includeFiles;   // Имена файлов
     QStringList includes;       // Содержимое инклудов, независимо от происхождения
@@ -52,6 +56,9 @@ private:
     QHash<QString, QByteArray> compiled; // Аналогично - имя блока - байткод.
 
     QHash<QString, QStringList> hwSequence;
+
+
+    QHash<QString, QByteArray> ATOMS; //temporary?
 
     QMap<QString, int> parserSems;        // Семафоры.
 

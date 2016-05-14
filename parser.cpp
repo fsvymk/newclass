@@ -11,6 +11,8 @@
 #include "vartypes.h"
 #include "sems.h"
 
+#include "mainwindow.h"
+
 // #include "../sid/sid.h"
 
 # include <QtCore/qatomic_x86.h>
@@ -393,7 +395,7 @@ QByteArray Parser::processScript(QString value, QStringList numbers, const QMap<
 }
 
 
-QByteArray  compileStr(QString str){
+QByteArray Parser::compileStr(QString str){
     QByteArray result;
 
     // String samples:
@@ -494,13 +496,33 @@ QByteArray  compileStr(QString str){
     0x04 (длина блока)
     0x02 (Переменная)	Code
 */
+    QHash<QString, QString> Atoms;
 
+    QRegExp QRE_SPLIT_STRING("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
+    QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
 
-    return result;
+    QRegExp QRE_FUNCTION("[\w]+");
+    QRegExp QRE_COMMA("\,");
+    QRegExp QRE_TEXT("\"([\w\s\d]+)\"");
+
+    if(str.length()<1) return ""; // со нулевой строкой нечего делать
+    QR.setMinimal(true);
+
+    while(1==1)
+    {
+        int i = QR.indexIn(str);
+        if(i<0) return "B";
+        this->ATOMS.insert(QR.cap(0),"00");
+
+        str = str.right(str.length() - QR.cap(0).length());
+    }
+    return 0;
 }
 
-QByteArray  compileBlock(QStringList block){
+QByteArray  compileBlock(QStringList &block){
+    QByteArray result;
 
+    return result;
 }
 
 
@@ -662,9 +684,18 @@ this->parserSems.insert("debug_prnt",       0x23);
 
 }
 
+void Parser::testCase01(){
+    QString test =  "debug_prnt (\"Module IP1 was run at %02d:%02d\", m_pos, m_channel);";
+    QByteArray res = compileStr(test);
+
+
+}
+
 
 int Parser::compile(){
     // WiFi b1212556789
+
+    testCase01();return 0;
 
     Sems semSoup;
 
