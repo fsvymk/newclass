@@ -400,6 +400,7 @@ QByteArray Parser::compileStr(QString str){
 
     // String samples:
     /*  debug_prnt ("Module IP1 was run at %02d:%02d", m_pos, m_channel);
+     *
 
 
     0x06                                   04/06/08 - длины блока, тут они везде
@@ -425,7 +426,7 @@ QByteArray Parser::compileStr(QString str){
 
     0x04
 0x08	0xF1                            8 - операнд         F1 = конец записи (из таблицы) ПСЕВДООПЕРАЦИЯ. ВЫПОЛНИТЬ.
-    */
+
 
     // Даже запятая может иметь свой отдельный блок, ну что же.
 
@@ -438,7 +439,7 @@ QByteArray Parser::compileStr(QString str){
 
  //=============================================================================================================================//
   //  Блоки описаний программирования Bn
-    /*
+
     0x06 (длина блока)
     0x01 (Функция)	Code
     Смещение
@@ -499,22 +500,39 @@ QByteArray Parser::compileStr(QString str){
     QHash<QString, QString> Atoms;
 
     QRegExp QRE_SPLIT_STRING("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
-    QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
+    //QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]");
 
     QRegExp QRE_FUNCTION("[\w]+");
     QRegExp QRE_COMMA("\,");
     QRegExp QRE_TEXT("\"([\w\s\d]+)\"");
 
     if(str.length()<1) return ""; // со нулевой строкой нечего делать
-    QR.setMinimal(true);
 
-    while(1==1)
-    {
-        int i = QR.indexIn(str);
-        if(i<0) return "B";
-        this->ATOMS.insert(QR.cap(0),"00");
+    QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]", Qt::CaseInsensitive);
+    QR.setMinimal(false);
+    QStringList SL;
+    QHash<int, QStringList> allResult;
 
-        str = str.right(str.length() - QR.cap(0).length());
+    int count = 0;
+    int pos = 0;
+    int i;
+    int x;
+
+    QString code = str;
+
+    while ((pos = QR.indexIn(code, pos)) != -1) {
+
+        ++count;
+        pos += QR.matchedLength();
+
+        SL.clear();
+        SL.append(QR.capturedTexts());
+
+        i = 0;
+        x = SL.count();
+
+        Atoms.insert(QR.cap(0), QR.cap(1));
+
     }
     return 0;
 }
