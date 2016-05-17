@@ -438,17 +438,23 @@ QByteArray Parser::compileAtom(QString atom){
      *
      * 6. Запятая
      *
-     * 7.
+     * 7. Номер строки - Получим другим путем
      * */
     Sems SEMS;
     QString functions = SEMS.allFunctions();
+    QString QRSBrakes = "[\s\t]*\([\w\W]*\)";
 
     QRegExp QR_function(functions);         // 1
+      // 2 - pass, eoF will received in other way
 
     QRegExp QR_if("if[\s\t]*\([\w\W]*\)");  // 3
     QRegExp QR_continue("continue");        // 4
     QRegExp QR_separaror("\;|\{|\}");       // 5
     QRegExp QR_comma("\,");                 // 6
+     // 7 - other way
+
+    QRegExp QR_procedure("procedure"+QRSBrakes); // 8
+    QRegExp QR_operand("");
 
     return result;
 }

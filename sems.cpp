@@ -95,3 +95,17 @@ QString Sems::allFunctions(){
 
     return result;
 }
+
+// Hello, china!
+QString Sems::allOps(){
+    QString result;
+
+    QHash<QString, int>::iterator it;
+    for(it = this->Opeartion.begin(); it != this->Opeartion.end(); ++it){
+        result.append(it.key());
+        result.append("|");
+    }
+
+    return result;
+}
+

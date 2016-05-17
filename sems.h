@@ -17,6 +17,7 @@ public:
     void initErrors();
     void initPreDefs();
 
+    QString allOps();
     QString allFunctions();
 };
 
