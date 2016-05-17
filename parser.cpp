@@ -424,6 +424,16 @@ QByteArray Parser::compileAtom(QString atom){
      * 13. Variant
      *
      * */
+    
+    // 1. Регулярное выражение - список функций, если нет строгого соответствия, значит не функция
+    /*
+     * 2. Конец функции - ...
+     * 
+     * 3. Регулярка с условным переходом и выражение в аргументе.
+     *      Выражение в аргументе....
+     * 
+     * 4. Строгое соответствие шаблону 
+     * */
 
     return result;
 }
@@ -435,7 +445,7 @@ void Parser::splitStr(QString str, QList<QString> &atoms){
     QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]", Qt::CaseInsensitive);
     QR.setMinimal(false);
 
-    //int count = 0; // poor count, save his life for debug in the future.
+    //int count = 0;
     int pos = 0;
 
     while ((pos = QR.indexIn(str, pos)) != -1) {
