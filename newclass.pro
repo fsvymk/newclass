@@ -37,4 +37,5 @@ DISTFILES += \
     vartypes.s \
     main.s \
     analize.s \
-    sample.py
+    sample.py \
+    ouput.js

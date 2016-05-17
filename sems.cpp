@@ -75,6 +75,15 @@ void Sems::initPreDefs(){
     this->predefinedVars.insert("__FF",         0xFF);
 }
 
+void Sems::initTypes(){
+    this->Type.insert("word", 0x00);
+    this->Type.insert("dword", 0x01);
+    this->Type.insert("uword", 0x02);
+    this->Type.insert("udword", 0x03);
+    this->Type.insert("array", 0x04);
+    this->Type.insert("msg", 0x05);
+}
+
 Sems::Sems()
 {
     semsInitDefault();
@@ -102,6 +111,7 @@ QString Sems::allOps(){
 
     QHash<QString, int>::iterator it;
     for(it = this->Opeartion.begin(); it != this->Opeartion.end(); ++it){
+        result.append("\\");
         result.append(it.key());
         result.append("|");
     }
@@ -109,3 +119,16 @@ QString Sems::allOps(){
     return result;
 }
 
+// Hello, china!
+QString Sems::allTypes(){
+    QString result;
+
+    QHash<QString, int>::iterator it;
+    for(it = this->Type.begin(); it != this->Type.end(); ++it){
+        result.append("\\");
+        result.append(it.key());
+        result.append("|");
+    }
+
+    return result;
+}
