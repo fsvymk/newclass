@@ -36,4 +36,5 @@ DISTFILES += \
     parser.s \
     vartypes.s \
     main.s \
-    analize.s
+    analize.s \
+    sample.py

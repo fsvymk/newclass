@@ -16,6 +16,8 @@ public:
     void initOps();
     void initErrors();
     void initPreDefs();
+
+    QString allFunctions();
 };
 
 #endif // SEMS_H

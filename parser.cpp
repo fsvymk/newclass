@@ -432,8 +432,23 @@ QByteArray Parser::compileAtom(QString atom){
      * 3. Регулярка с условным переходом и выражение в аргументе.
      *      Выражение в аргументе....
      * 
-     * 4. Строгое соответствие шаблону 
+     * 4. Строгое соответствие шаблону "Безусловный переход в начало цикла"; continue;
+     *
+     * 5. Это типа любое из ; } {  если я правильно понял
+     *
+     * 6. Запятая
+     *
+     * 7.
      * */
+    Sems SEMS;
+    QString functions = SEMS.allFunctions();
+
+    QRegExp QR_function(functions);         // 1
+
+    QRegExp QR_if("if[\s\t]*\([\w\W]*\)");  // 3
+    QRegExp QR_continue("continue");        // 4
+    QRegExp QR_separaror("\;|\{|\}");       // 5
+    QRegExp QR_comma("\,");                 // 6
 
     return result;
 }
@@ -452,6 +467,7 @@ void Parser::splitStr(QString str, QList<QString> &atoms){
         //++count;
         pos += QR.matchedLength();
         atoms.append(QR.cap(0));
+        compileAtom(QR.cap(0));
     }
 }
 

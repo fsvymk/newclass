@@ -82,3 +82,16 @@ Sems::Sems()
     initErrors();
     initPreDefs();
 }
+
+
+QString Sems::allFunctions(){
+    QString result;
+
+    QHash<QString, int>::iterator it;
+    for(it = this->Sem.begin(); it != this->Sem.end(); ++it){
+        result.append(it.key());
+        result.append("|");
+    }
+
+    return result;
+}
