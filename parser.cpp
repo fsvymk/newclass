@@ -22,7 +22,7 @@ int Parser::checkDefines(QString *str){
     QString script = *str;
     QString StepArgs;
     QRegExp QR("#[D|d]efine[\\s]+([\\w]+)[\\s]+([\\w|\\d]+)");
-    QR.setMinimal(true);
+    QR.setMinimal(false);
 
     while(1==1)
     {
@@ -675,10 +675,37 @@ void Parser::testCase01(){
 void Parser::compileHWS(){
     QHash<QString, QStringList>::iterator it;
     QStringList content;
+    QString     hwSequenceID;
+
+    //byte-code
+    char blockCounter = 0xFF;
+    char HWS_OPCODE  = 0x06;
+
+    this->hwSequenceCompiled.append(blockCounter);
+    this->hwSequenceCompiled.append(HWS_OPCODE);
+    quint16 CRC16       = 0; // не обнуляется в цикле.
 
     for(it=this->hwSequence.begin();  it!=this->hwSequence.end();  ++it){
+        content         = it.value();
+        hwSequenceID    = it.key();
+        quint16 counter     = 0;
+                 // ...
+        QString strHWSID    = this->defines.value(hwSequenceID);  // то что в скобках
+        bool    HWSID_detected;
+        quint16 HWSID       = strHWSID.toInt(&HWSID_detected, 16);
 
-        content = it.value();
+
+
+        if(!HWSID_detected){
+            // error
+        }
+        //
+
+        // How to convert int16 to 2 chars? Ok, divide it by 256..
+
+        this->hwSequenceCompiled.append(HWSID%256);
+        this->hwSequenceCompiled.append(HWSID/256);
+        this->hwSequenceCompiled.append("xxxx");  // CRC16, counter;
 
         int i;
         int n = content.size();
@@ -689,6 +716,9 @@ void Parser::compileHWS(){
         QString line;
 
         for(i=0;i<n;i++){
+
+
+
             line = content.at(i);
             this->strings.append(line); // DEL!
 
@@ -699,11 +729,30 @@ void Parser::compileHWS(){
             QStringList definitions  = QRDefinition.capturedTexts();
 
             if(a>0){
+                CRC16++;
+                counter++;
                 this->strings.append("anchor");
+                QString anchor = anchors.at(1);
             }
 
             if(d>0){
-                this->strings.append("definition");
+                CRC16++;
+                counter++;
+
+                QString strModuleID         = definitions.at(1);
+                QString strModulePosition   = definitions.at(2);
+
+                bool module_detected;
+                bool position_detected;
+
+                quint8 moduleHWID       = 0;
+                quint8 moduleID         = this->defines.value(strModuleID).toInt(&module_detected, 16);
+                quint16 modulePosition  = strModulePosition.toInt(&module_detected, 10);
+
+
+                this->hwSequenceCompiled.append(moduleHWID);
+                this->hwSequenceCompiled.append(moduleID);
+                this->hwSequenceCompiled.append(modulePosition);
             }
         }
     }
@@ -744,7 +793,7 @@ int Parser::compile(){
 
     this->classify(&this->script, &this->hwSequence, PARSER_QREGEXP_HW_SEQUENCE);
 
-    compileHWS();
+
 
     // теперь код поблочно лежит в контейнере sorted.
     //
@@ -761,6 +810,8 @@ int Parser::compile(){
     // Составить таблицу переменных.
     int cVr = this->checkVariables(script);
 
+
+    compileHWS();
 
 
 }

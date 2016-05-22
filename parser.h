@@ -57,6 +57,7 @@ private:
     QHash<QString, QByteArray> compiled; // Аналогично - имя блока - байткод.
 
     QHash<QString, QStringList> hwSequence;
+    QByteArray hwSequenceCompiled;
 
     QMap<QString, int> parserSems;        // Семафоры.
 
