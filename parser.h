@@ -78,6 +78,9 @@ private:
     void        temporary_green();
     void        saveLogs(QString code, QString result);
 
+    void        compileHWS();
+    void        selectHWS();
+
     // Parser
     static const int LineSize = 32;
     QStringList BlockNames;

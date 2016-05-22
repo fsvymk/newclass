@@ -21,6 +21,7 @@ public:
 
     QString allOps();
     QString allFunctions();
+    QString allTypes();
 };
 
 #endif // SEMS_H

@@ -29,7 +29,6 @@ HW_SEQUENCE (HW_SEQ_MKT_2) {
 };
 
 
-
 #define IP1_UPDATE EVENT_L00
 
 module  (  KPA_IP1  ,  SEQ_CTRL_ROOT    )       {

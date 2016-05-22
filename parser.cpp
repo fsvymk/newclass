@@ -49,7 +49,7 @@ int Parser::checkVariables(QString *str){
          list << rx.cap(1);
          pos += rx.matchedLength();
     }
-     return varCount;
+    return varCount;
 }
 
 QString Parser::QStringList_print(QStringList list)
@@ -467,7 +467,7 @@ QByteArray Parser::compileAtom(QString atom){
     QRegExp QR_Variant(); // список всех переменных
 
     QRegExp QR_expression(); // выражение
-    QRegExp QR_var(SEMS.allTypes+"[\\s\\t]*([w]+)"); // объявление переменной (до знака равенства)
+    //QRegExp QR_var(SEMS.allTypes+"[\\s\\t]*([w]+)"); // объявление переменной (до знака равенства)
 
     // Все переменные можно заранее найти и занести
     // в контейнер а из него в регулярку отдельным методом
@@ -672,11 +672,65 @@ void Parser::testCase01(){
     splitStr(test, testResult);
 }
 
+void Parser::compileHWS(){
+    QHash<QString, QStringList>::iterator it;
+    QStringList content;
+
+    for(it=this->hwSequence.begin();  it!=this->hwSequence.end();  ++it){
+
+        content = it.value();
+
+        int i;
+        int n = content.size();
+
+        QRegExp QRAnchor("\\@([\\w]+)");        //\\@([\\w]+)
+        QRegExp QRDefinition("([\\w\\d\\_]+)[\\s\\t]*\\:[\\s\\t]*([\\w\\d]+)");
+
+        QString line;
+
+        for(i=0;i<n;i++){
+            line = content.at(i);
+            this->strings.append(line); // DEL!
+
+            int a = QRAnchor.indexIn(line);
+            int d = QRDefinition.indexIn(line);
+
+            QStringList anchors      = QRAnchor.capturedTexts();
+            QStringList definitions  = QRDefinition.capturedTexts();
+
+            if(a>0){
+                this->strings.append("anchor");
+            }
+
+            if(d>0){
+                this->strings.append("definition");
+            }
+        }
+    }
+}
+
+void Parser::selectHWS(){
+
+    int i = 0;
+    int n = this->sorted.size();
+
+    QHash<QString, QStringList>::iterator it;
+    QString firstLine;
+
+    for(it=this->sorted.begin();  it!=this->sorted.end();  ++it){
+        firstLine = it.value().at(0);
+        this->strings.append(firstLine);
+    }
+
+    for(i=0; i<n; i++){
+        //QString firstLine = this->sorted.;
+    }
+}
 
 int Parser::compile(){
     // WiFi b1212556789
 
-    testCase01();return 0;
+   //testCase01();return 0;
 
     Sems semSoup;
 
@@ -687,7 +741,10 @@ int Parser::compile(){
     //this->splitBlocks(*script); // temporary off
 
     this->classify(&this->script, &this->sorted, PARSER_QREGEXP_MODULE);
-    this->classify(&this->script, &this->sorted, PARSER_QREGEXP_HW_SEQUENCE);
+
+    this->classify(&this->script, &this->hwSequence, PARSER_QREGEXP_HW_SEQUENCE);
+
+    compileHWS();
 
     // теперь код поблочно лежит в контейнере sorted.
     //
@@ -703,5 +760,7 @@ int Parser::compile(){
 
     // Составить таблицу переменных.
     int cVr = this->checkVariables(script);
+
+
 
 }
