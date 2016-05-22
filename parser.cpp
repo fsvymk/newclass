@@ -739,6 +739,8 @@ void Parser::compileHWS(){
                 CRC16++;
                 counter++;
 
+                this->strings.append("definition");
+
                 QString strModuleID         = definitions.at(1);
                 QString strModulePosition   = definitions.at(2);
 
@@ -753,6 +755,9 @@ void Parser::compileHWS(){
                 this->hwSequenceCompiled.append(moduleHWID);
                 this->hwSequenceCompiled.append(moduleID);
                 this->hwSequenceCompiled.append(modulePosition);
+
+
+
             }
         }
     }

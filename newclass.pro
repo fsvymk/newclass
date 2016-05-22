@@ -30,7 +30,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-QMAKE_CFLAGS += -save_temps -L/opt/lib
+QMAKE_CXXFLAGS+=-g3
 
 DISTFILES += \
     parser.s \
