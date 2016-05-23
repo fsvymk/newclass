@@ -41,7 +41,7 @@ public:
     QByteArray  compileAtom(QString atom);
     void        splitStr(QString str, QList<QString> &atoms);
     QByteArray  compileBlock(QStringList block);
-
+QString    hwSequenceCompiledHex;
     // TEST:
 
     void testCase01();
@@ -58,6 +58,7 @@ private:
 
     QHash<QString, QStringList> hwSequence;
     QByteArray hwSequenceCompiled;
+
 
     QMap<QString, int> parserSems;        // Семафоры.
 
@@ -79,6 +80,7 @@ private:
     void        temporary_green();
     void        saveLogs(QString code, QString result);
 
+    void        HWStoHex();
     void        compileHWS();
     void        selectHWS();
 

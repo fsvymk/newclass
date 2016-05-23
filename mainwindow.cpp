@@ -23,4 +23,7 @@ void MainWindow::on_pushButton_clicked()
     Parser P;
     P.script = ui->plainTextEdit->toPlainText();
     int i = P.compile();
+
+    QString output = P.hwSequenceCompiledHex;
+    ui->plainTextEdit_2->appendPlainText(output);
 }

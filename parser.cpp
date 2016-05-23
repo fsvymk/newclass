@@ -672,6 +672,23 @@ void Parser::testCase01(){
     splitStr(test, testResult);
 }
 
+void Parser::HWStoHex(){
+
+    this->hwSequenceCompiledHex.clear();
+    int n = this->hwSequenceCompiled.size();
+    int i = 0;
+    for(i=0; i<n; i++){
+        unsigned char c = this->hwSequenceCompiled.at(i);
+        QString hex = QString::number(c, 16);
+
+        if(i%8 == 0) this->hwSequenceCompiledHex.append("   ");
+        if(i%16 == 0) this->hwSequenceCompiledHex.append("\n");
+        if(c<16) this->hwSequenceCompiledHex.append("0");
+        this->hwSequenceCompiledHex.append(hex + " ");
+
+    }
+}
+
 void Parser::compileHWS(){
     QHash<QString, QStringList>::iterator it;
     QStringList content;
@@ -695,12 +712,9 @@ void Parser::compileHWS(){
         quint16 HWSID       = strHWSID.toInt(&HWSID_detected, 16);
 
 
-
         if(!HWSID_detected){
             // error
         }
-        //
-
         // How to convert int16 to 2 chars? Ok, divide it by 256..
 
         this->hwSequenceCompiled.append(HWSID%256);
@@ -716,15 +730,10 @@ void Parser::compileHWS(){
         QString line;
 
         for(i=0;i<n;i++){
-
-
-
             line = content.at(i);
             this->strings.append(line); // DEL!
-
             int a = QRAnchor.indexIn(line);
             int d = QRDefinition.indexIn(line);
-
             QStringList anchors      = QRAnchor.capturedTexts();
             QStringList definitions  = QRDefinition.capturedTexts();
 
@@ -738,12 +747,9 @@ void Parser::compileHWS(){
             if(d>0){
                 CRC16++;
                 counter++;
-
                 this->strings.append("definition");
-
                 QString strModuleID         = definitions.at(1);
                 QString strModulePosition   = definitions.at(2);
-
                 bool module_detected;
                 bool position_detected;
 
@@ -751,16 +757,15 @@ void Parser::compileHWS(){
                 quint8 moduleID         = this->defines.value(strModuleID).toInt(&module_detected, 16);
                 quint16 modulePosition  = strModulePosition.toInt(&module_detected, 10);
 
-
                 this->hwSequenceCompiled.append(moduleHWID);
                 this->hwSequenceCompiled.append(moduleID);
                 this->hwSequenceCompiled.append(modulePosition);
-
-
-
             }
         }
     }
+
+
+    HWStoHex();
 }
 
 void Parser::selectHWS(){
@@ -817,6 +822,4 @@ int Parser::compile(){
 
 
     compileHWS();
-
-
 }
