@@ -64,6 +64,7 @@ private:
 
     int         checkDefines(QString *str);
     int         checkVariables(QString *str);
+    int         loadIncludes();
 
     QString     QStringList_print(QStringList list);
     bool        parseSem(QXmlStreamReader &xml, QMap<QString, int> &sems);

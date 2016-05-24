@@ -681,6 +681,7 @@ void Parser::HWStoHex(){
         unsigned char c = this->hwSequenceCompiled.at(i);
         QString hex = QString::number(c, 16);
 
+        if(i%4 == 0) this->hwSequenceCompiledHex.append("  ");
         if(i%8 == 0) this->hwSequenceCompiledHex.append("   ");
         if(i%16 == 0) this->hwSequenceCompiledHex.append("\n");
         if(c<16) this->hwSequenceCompiledHex.append("0");
@@ -698,11 +699,16 @@ void Parser::compileHWS(){
     char blockCounter = 0xFF;
     char HWS_OPCODE  = 0x06;
 
-    this->hwSequenceCompiled.append(blockCounter);
-    this->hwSequenceCompiled.append(HWS_OPCODE);
+
     quint16 CRC16       = 0; // не обнуляется в цикле.
 
+    QStringList hwsModules;
+
     for(it=this->hwSequence.begin();  it!=this->hwSequence.end();  ++it){
+
+        this->hwSequenceCompiled.append(blockCounter);
+        this->hwSequenceCompiled.append(HWS_OPCODE);
+
         content         = it.value();
         hwSequenceID    = it.key();
         quint16 counter     = 0;
@@ -719,6 +725,10 @@ void Parser::compileHWS(){
 
         this->hwSequenceCompiled.append(HWSID%256);
         this->hwSequenceCompiled.append(HWSID/256);
+
+        int addrTotal = this->hwSequenceCompiled.size();
+        int addrLocal = this->hwSequenceCompiled.size() + 2;
+
         this->hwSequenceCompiled.append("xxxx");  // CRC16, counter;
 
         int i;
@@ -738,12 +748,18 @@ void Parser::compileHWS(){
             QStringList definitions  = QRDefinition.capturedTexts();
 
             if(a>0){
-                CRC16++;
+                //CRC16++;
+                bool anchor_detected;
+
                 counter++;
                 this->strings.append("anchor");
                 QString anchor = anchors.at(1);
+                quint16 anchorID = this->defines.value(anchor).toInt(&anchor_detected, 16);
+                this->hwSequenceCompiled.append(255);
+                this->hwSequenceCompiled.append(255);
+                this->hwSequenceCompiled.append(anchorID%256);
+                this->hwSequenceCompiled.append(anchorID/256);
             }
-
             if(d>0){
                 CRC16++;
                 counter++;
@@ -757,13 +773,29 @@ void Parser::compileHWS(){
                 quint8 moduleID         = this->defines.value(strModuleID).toInt(&module_detected, 16);
                 quint16 modulePosition  = strModulePosition.toInt(&module_detected, 10);
 
+                if(module_detected){
+                    // check, is this module in list. If not, append it, else take it number;
+                    if (!hwsModules.contains(strModuleID, Qt::CaseInsensitive)){
+                        hwsModules.append(strModuleID);
+                        if(hwsModules.size()>254){
+                            // error. Overflow!
+                        }
+                    }
+                    moduleHWID = hwsModules.indexOf(strModuleID);
+                }
                 this->hwSequenceCompiled.append(moduleHWID);
                 this->hwSequenceCompiled.append(moduleID);
-                this->hwSequenceCompiled.append(modulePosition);
+                this->hwSequenceCompiled.append(modulePosition%256);
+                this->hwSequenceCompiled.append(modulePosition/256);
             }
         }
+        this->hwSequenceCompiled[addrLocal + 0] = counter%256;
+        this->hwSequenceCompiled[addrLocal + 1] = counter/256;
+        this->hwSequenceCompiled[addrTotal + 0] = counter%256; //crc?
+        this->hwSequenceCompiled[addrTotal + 1] = counter/256; //crc?
     }
-
+    this->hwSequenceCompiled[4] = CRC16%256;
+    this->hwSequenceCompiled[5] = CRC16/256;
 
     HWStoHex();
 }
@@ -786,6 +818,33 @@ void Parser::selectHWS(){
     }
 }
 
+int Parser::loadIncludes(){
+    QStringList::iterator it;
+
+    for(it=this->includeFiles.begin();it!=this->includeFiles.end();++it){
+        QFile hFile(*it);
+        if (hFile.open(QIODevice::ReadOnly))
+        {
+           QTextStream in(&hFile);
+           while (!in.atEnd())
+           {
+              QString line = in.readLine();
+              this->includes.append(line);
+           }
+           hFile.close();
+        }
+    }
+
+    // Append includes before first line of main script;
+
+
+    QString included;
+    for(it=this->includes.begin();it!=this->includes.end();++it){
+        included.append(*it);
+    }
+    this->script.prepend(included); // nice.
+}
+
 int Parser::compile(){
     // WiFi b1212556789
 
@@ -803,8 +862,6 @@ int Parser::compile(){
 
     this->classify(&this->script, &this->hwSequence, PARSER_QREGEXP_HW_SEQUENCE);
 
-
-
     // теперь код поблочно лежит в контейнере sorted.
     //
     // ключ     - название блока
@@ -813,7 +870,9 @@ int Parser::compile(){
     // Подключить все инклуды по списку
     this->addIncludeFile("definitions.h");
     this->addIncludeFile("project1.h");
-
+    this->addIncludeFile("kpa_config.h");
+    this->addIncludeFile("names.h");
+    int lIf = this->loadIncludes();
     // Найти все #define
     int cDr = this->checkDefines(script);
 
