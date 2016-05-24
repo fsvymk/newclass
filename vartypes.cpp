@@ -4,10 +4,13 @@
 
 VarTypes::VarTypes()
 {
-        this->types.append("int");
         this->types.append("dint");
-        this->types.append("word");
+        this->types.append("uint");
+        this->types.append("int");
         this->types.append("dword");
+        this->types.append("uword");
+        this->types.append("word");
+
         // Deprecated.
 
         // Look at that:

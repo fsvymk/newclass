@@ -37,16 +37,19 @@ int Parser::checkDefines(QString *str){
 }
 
 int Parser::checkVariables(QString *str){
-    int varCount = 0;
+    int varCount    = 0;
+    int index   = 0;
 
     VarTypes VT;
 
     QRegExp rx(VT.getRegExpQueue()+"[\\s+](\\w+)");
     QRegExp erx(VT.getRegExpQueue()+"[\\s\\t]*([^\\n]*)\\;");
+    QRegExp erx_rgPort("([\\w\\d\\_]*)[\\s\\t]*\\:[\\s\\t]*(port|rg)[\\s\\t]*\\:[\\s\\t]*([\\w\\d\\_]*)");
+    QRegExp erxVarName("\\w+");
 
     QStringList types;
     QStringList list;
-
+    QStringList vars;
 
     int pos = 0;
 
@@ -54,9 +57,53 @@ int Parser::checkVariables(QString *str){
          types << erx.cap(1);
          list << erx.cap(2);
          pos += erx.matchedLength();
+
+         vars = erx.cap(2).split(",");
+
+         this->variables << vars;
     }
+    this->variables.removeDuplicates();
 
+    // Let's sort variables;
+    QStringList::iterator it;
+    QString name, type, value;
 
+    for(it=this->variables.begin(); it!=this->variables.end(); ++it){
+        QString all = *it;
+        int ZZ =  erx_rgPort.indexIn(*it);
+        int YY = erxVarName.indexIn(*it);
+
+        int Z = erx_rgPort.captureCount();
+        int Y = erxVarName.captureCount();
+        int iType = 4;
+
+        if(ZZ>=0)
+        {
+            name  = erx_rgPort.cap(1);
+            type  = erx_rgPort.cap(2); // nothing, register, port
+            value = erx_rgPort.cap(3);
+
+            this->varMap.insert(name, value + " (" + type + ")");
+
+            if(type=="rg")      iType = 40;
+            if(type=="port")    iType = 80;
+
+            index++;
+            if(index>254) { /*error: index overflow */ }
+            this->varIndexes.insert(name, index);
+            this->varTypes.insert(index, iType);
+
+        }else
+            {
+                index++;
+                name = erxVarName.cap(0);
+                this->varMap.insert(name, "");
+
+                this->varIndexes.insert(name, index);
+                this->varTypes.insert(index, iType);
+            }
+
+    }
     return varCount;
 }
 

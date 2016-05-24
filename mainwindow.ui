@@ -96,7 +96,7 @@ module	(	KPA_IP3	, 		 HW_CTRL_ROOT	)	 {
 module (KPA_IP4, HW_SEQ_CTRL_ROOT) {				
 	uword Vx : rg:7, dVx:rg:8;			
 	uword Ctrl:port:0;			
-	word A, B, C;			
+	word AX, BX, C;			
 				
 	VAR_EVENTS {			
 		Ctrl ::: IP1_UPDATE		
