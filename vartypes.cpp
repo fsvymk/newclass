@@ -18,17 +18,18 @@ VarTypes::VarTypes()
 
 QString VarTypes::getRegExpQueue()
 {
-    QString result = "[";
+    QString result = "(";
 
     int cnt = 0;
     QStringList::const_iterator it;
     for(it=this->types.constBegin(); it!=this->types.constEnd(); ++it)
     {
         result += *it;
+        result += "|";
         cnt++;
     }
 
-    result += "var]";
+    result += "var)";
 
     return result;
 }

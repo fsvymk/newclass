@@ -54,7 +54,18 @@ HW_SEQUENCE (HW_SEQ_MKT_2) {
     KPA_MKT_1:3,				
     KPA_MKT_1:4				
 };				
-				
+	
+HW_SEQUENCE (HW_SEQ_MKT_2) {				
+    KPA_MKT_2:0,				
+    KPA_MKT_2:1,				
+    KPA_MKT_2:2,				
+    KPA_MKT_2:3,				
+    KPA_MKT_2:4,				
+    KPA_MKT_2:5,				
+    KPA_MKT_3:2,				
+    KPA_MKT_3:3,				
+    KPA_MKT_3:4				
+};			
 				
 				
 #define IP1_UPDATE EVENT_L00	

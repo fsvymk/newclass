@@ -42,13 +42,21 @@ int Parser::checkVariables(QString *str){
     VarTypes VT;
 
     QRegExp rx(VT.getRegExpQueue()+"[\\s+](\\w+)");
+    QRegExp erx(VT.getRegExpQueue()+"[\\s\\t]*([^\\n]*)\\;");
+
+    QStringList types;
     QStringList list;
+
+
     int pos = 0;
 
-    while ((pos = rx.indexIn(*str, pos)) != -1) {
-         list << rx.cap(1);
-         pos += rx.matchedLength();
+    while ((pos = erx.indexIn(*str, pos)) != -1) {
+         types << erx.cap(1);
+         list << erx.cap(2);
+         pos += erx.matchedLength();
     }
+
+
     return varCount;
 }
 

@@ -33,9 +33,6 @@ HW_SEQUENCE (HW_SEQ_MKT_2) {
 
 module  (  KPA_IP1  ,  SEQ_CTRL_ROOT    )       {
 
-
-
-
         procedure ( IP1_UPDATE) {
                 A := Ctrl;
                 Ctrl := A & 0xFFFE;
@@ -57,7 +54,7 @@ module	(	KPA_IP3	, 		 HW_CTRL_ROOT	)	 {
 module (KPA_IP4, HW_SEQ_CTRL_ROOT) {
         uword Vx : rg:7, dVx:rg:8;
         uword Ctrl:port:0;
-        word A, B, C;
+        word  A, B, C;
 
         VAR_EVENTS {
                 Ctrl ::: IP1_UPDATE
@@ -68,8 +65,8 @@ module (KPA_IP4, HW_SEQ_CTRL_ROOT) {
                 Ctrl := A & 0xFFFE;
                 rg[11] := Vx + dVx;
                 rg[10] := Vx - dVx;
-                rg[1] := 0xA710;
-                Ctrl := 0x0002 | iif ( A & 0x0020, A | 0x8000, A);
+                rg[1]  := 0xA710;
+                Ctrl   := 0x0002 | iif ( A & 0x0020, A | 0x8000, A);
         }
 
         procedure Run (EVENT_GRUN) {
