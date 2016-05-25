@@ -990,14 +990,15 @@ int Parser::loadIncludes(){
 }
 
 QByteArray Parser::compileModule(QString key){
-    QStringList M = this->sorted.take(key);
-    QByteArray result;
-
-    QByteArray VARS = compileVariables(&M);
-    result.append(VARS);
-
-    result.append("0");
-    return result;
+    QList<module>::iterator mit;
+    for(mit=this->Modules.begin(); mit!=this->Modules.end(); ++mit){
+        mit->prepareVariables();
+        QList<variable>::iterator vit;
+        //let's to set variables indexes
+        for(vit=mit->variables.begin();    vit!=mit->variables.end(); ++vit){
+            vit->index = this->varIndexes.take(vit->name);
+        }
+    }
 }
 
 void Parser::takeModules(){
