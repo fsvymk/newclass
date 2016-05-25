@@ -20,5 +20,5 @@ QByteArray variable::A6(){
 }
 
 void variable::getIndex(){
-    this->index = this->indexBase.take(this->name);
+    // deprecated
 }

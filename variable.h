@@ -14,8 +14,6 @@ public:
     varParameters   VP;
 
     //
-
-    QMap<QString, quint8>  indexBase;
     QString         name;
 
     // methods:

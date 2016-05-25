@@ -990,15 +990,23 @@ int Parser::loadIncludes(){
 }
 
 QByteArray Parser::compileModule(){
+    /*
     QList<module>::iterator mit;
     for(mit=this->Modules.begin(); mit!=this->Modules.end(); ++mit){
         mit->prepareVariables();
         QList<variable>::iterator vit;
+
+        quint8 index;
         //let's to set variables indexes
-        for(vit=mit->variables.begin();    vit!=mit->variables.end(); ++vit){
-            vit->index = this->varIndexes.take(vit->name);
-        }
+        //for(vit=mit->variables.begin();    vit!=mit->variables.end(); ++vit){
+
+            //index =  this->varIndexes.take(vit->name);
+            //vit->index = index;
+
+        //}
+
     }
+    */
 }
 
 void Parser::takeModules(){
@@ -1044,9 +1052,7 @@ int Parser::compile(){
     // Составить таблицу переменных.
     int cVr = this->checkVariables(script);
 
-
+    compileHWS();
 
     compileModule();
-
-    compileHWS();
 }
