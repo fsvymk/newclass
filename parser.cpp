@@ -989,24 +989,30 @@ int Parser::loadIncludes(){
     this->script.prepend(included); // nice.
 }
 
-QByteArray Parser::compileModule(){
-    /*
+void Parser::compileModule(){
+
     QList<module>::iterator mit;
-    for(mit=this->Modules.begin(); mit!=this->Modules.end(); ++mit){
-        mit->prepareVariables();
+    int n = this->Modules.size();
+    int i = 0;
+
+    for(i=0;i<n;i++){
+        this->Modules.at(i).prepareVariables();
         QList<variable>::iterator vit;
 
         quint8 index;
         //let's to set variables indexes
-        //for(vit=mit->variables.begin();    vit!=mit->variables.end(); ++vit){
 
-            //index =  this->varIndexes.take(vit->name);
-            //vit->index = index;
+        M = mit;
 
-        //}
+        for(vit=M.variables.begin(); vit!=M.variables.end(); ++vit){
+
+            index =  this->varIndexes.take(vit->name);
+            vit->index = index;
+
+        }
 
     }
-    */
+
 }
 
 void Parser::takeModules(){
