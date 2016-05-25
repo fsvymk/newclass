@@ -80,7 +80,7 @@ QByteArray Parser::compileVariables(QStringList *str){
     // search type declaration
     QStringList::iterator sit;
     for(sit = code.begin(); sit != code.end(); ++sit){
-        while ((pos = erx.indexIn(*sit, pos)) != -1) {
+        if ((pos = erx.indexIn(*sit, pos)) != -1) {
              types << erx.cap(1);
              list << erx.cap(2);
              pos += erx.matchedLength();

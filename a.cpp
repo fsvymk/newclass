@@ -7,7 +7,7 @@
 //HEADERS like A1 A2 A3 A4 A5 A6 and other.
 
 varParameters::varParameters(){
-    this->eventCHANGE   =0;
+    this->eventCHANGE   =0;  // zero is cool too.
     this->eventSET      =0;
     this->eventZERO     =0;
 

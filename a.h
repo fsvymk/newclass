@@ -5,7 +5,7 @@
 
 class varParameters{
 public:
-    quint16 indexRP;           // zero is cool too.
+    quint16 indexRP;
     quint16 eventSET;
     quint16 eventZERO;
     quint16 eventCHANGE;
