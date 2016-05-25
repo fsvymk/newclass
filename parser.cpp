@@ -97,38 +97,12 @@ QByteArray Parser::compileVariables(QStringList *str){
         QString all = *it;
         int indexRgPort  =  erx_rgPort.indexIn(*it);
 
-
         int indexVarName = erxVarName.indexIn(*it);
         int countRgPort  = erx_rgPort.captureCount();
         int countVarName = erxVarName.captureCount();
 
-        int iType = 4;
-
-        if(indexRgPort>=0)
-        {
-            name  = erx_rgPort.cap(1);
-            type  = erx_rgPort.cap(2); // nothing, register, port
-            value = erx_rgPort.cap(3);
-
-            this->varMap.insert(name, value + " (" + type + ")");
-
-            if(type=="rg")      iType = 40;
-            if(type=="port")    iType = 80;
-
-            index++;
-            if(index>254) { /*error: index overflow */ }
-            this->varIndexes.insert(name, index);
-            this->varTypes.insert(index, iType);
-
-        }else
-            {
-                index++;
-                name = erxVarName.cap(0);
-                this->varMap.insert(name, "");
-
-                this->varIndexes.insert(name, index);
-                this->varTypes.insert(index, iType);
-            }
+        if(indexRgPort>=0){name  = erx_rgPort.cap(1);
+        }else{name = erxVarName.cap(0);}
 
     }
 
