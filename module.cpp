@@ -6,17 +6,11 @@ module::module(QStringList *code)
     this->code = *code;
 }
 
-void module::compile(){
-    this->compiled.clear();
-    QByteArray *R = &this->compiled;
-    prepareVariables();
-    R->append("\n\n");
-}
 
 void module::prepareVariables(){
     QStringList::iterator it;
     VarTypes VT;
-    QRegExp testDefinition(VT.getRegExpQueue() + "[\\s\\t]*([\\w\\d\\_]*)");
+    QRegExp testDefinition(VT.getRegExpQueue() + "[\\s\\t]*([^\\n]*)\\;");
 
     for(it=this->code.begin(); it!=this->code.end(); ++it){
         int test = testDefinition.indexIn(*it);
@@ -24,7 +18,13 @@ void module::prepareVariables(){
             QString type = testDefinition.cap(1);
             QString defs = testDefinition.cap(2);
 
-
         }
     }
+}
+
+void module::compile(){
+    this->compiled.clear();
+    QByteArray *R = &this->compiled;
+    prepareVariables();
+    R->append("\n\n");
 }
