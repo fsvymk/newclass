@@ -19,14 +19,12 @@ QByteArray a::A5(){QByteArray result; return result;}
 
 QByteArray a::A6(quint8 counter, quint8 moduleType, quint8 programID, QList<QByteArray> *A6){
     QByteArray result;
+    quint16 localVarCount = A6->size();
 
     result.append(counter);
     result.append(packLocal);
     result.append(moduleType);
     result.append(programID);
-
-    quint16 localVarCount = A6->size();
-
     result.append(localVarCount);
 
     QList<QByteArray>::iterator LBA;

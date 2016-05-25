@@ -51,13 +51,14 @@ QByteArray Parser::packVariable(quint8 index, quint8 type, quint32 value){
 }
 
 QByteArray Parser::compileVariables(QStringList *str){
-    QByteArray result;
-    a          headers;
+    QByteArray        result;
+    a                 headers;
+    QList<QByteArray> listA6;  // последовательность подструктур типа A6
 
     // копирование из checkVariables
 
-    int varCount    = 0;
-    int index   = 0;
+    int varCount      = 0;
+    int index         = 0;
 
     VarTypes VT;
 
@@ -96,10 +97,10 @@ QByteArray Parser::compileVariables(QStringList *str){
         QString all = *it;
         int indexRgPort  =  erx_rgPort.indexIn(*it);
 
-        // unused
-        //int indexVarName = erxVarName.indexIn(*it);
-        //int countRgPort  = erx_rgPort.captureCount();
-        //int countVarName = erxVarName.captureCount();
+
+        int indexVarName = erxVarName.indexIn(*it);
+        int countRgPort  = erx_rgPort.captureCount();
+        int countVarName = erxVarName.captureCount();
 
         int iType = 4;
 
