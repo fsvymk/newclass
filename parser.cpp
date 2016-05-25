@@ -1000,8 +1000,11 @@ QByteArray Parser::compileModule(QString key){
     return result;
 }
 
-void        takeModules(){
-
+void Parser::takeModules(){
+    QHash<QString, QStringList>::iterator it;
+    for(it = this->sorted.begin(); it != this->sorted.end(); ++it){
+        this->Modules.append(&it.value());
+    }
 }
 
 int Parser::compile(){
@@ -1042,5 +1045,10 @@ int Parser::compile(){
 
     compileHWS();
 
-    //QByteArray firstGrape = compileModule("KPA_IP3"); //died
+    //QByteArray firstGrape = compileModule("KPA_IP3"); // fuckup)
+
+    QList<module>::iterator mit;
+    for(mit=this->Modules.begin(); mit!=this->Modules.end(); ++mit){
+        mit->compile();
+    }
 }
