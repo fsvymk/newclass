@@ -7,6 +7,8 @@
 #include <QHash>
 #include <QXmlStreamReader>
 
+#include "a.h" //varParametes - ok
+
 class Parser{
 public:
     //garbage from graphs:
@@ -74,7 +76,8 @@ private:
     int         checkVariables(QString *str);
     int         loadIncludes();
 
-    QByteArray  packVariable(quint8 index, quint8 type, quint32 value);
+
+    QByteArray  packVariable(quint8 index, quint8 type, varParameters *VP);
     QByteArray  compileVariables(QStringList *str);
     QByteArray  compileModule(QString key);
     QString     QStringList_print(QStringList list);
@@ -82,6 +85,7 @@ private:
     QString     displaySems(QMap<QString, int> &sems);
     void        fetchSems(QString FileName, QMap<QString, int> &sems);
 
+    QByteArray  compileBlock(QStringList &block);
     void        parseBlock(QString Block, QMap<QString,int> &sems, int line);
     void        splitBlocks(QString code);
     void        classify(QString *code, QHash<QString, QStringList> *result, QString regExp);

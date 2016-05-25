@@ -15,9 +15,7 @@
 #include "mainwindow.h"
 #include "a.h"
 
-// #include "../sid/sid.h"
-
-# include <QtCore/qatomic_x86.h>
+#include <QtCore/qatomic_x86.h>
 
 int Parser::checkDefines(QString *str){
     QString script = *str;
@@ -37,23 +35,28 @@ int Parser::checkDefines(QString *str){
     return 0;
 }
 
-QByteArray Parser::packVariable(quint8 index, quint8 type, quint32 value){
+QByteArray Parser::packVariable(quint8 index, quint8 type, varParameters *VP){
     // It is devoted to Raskalov the roofer.
     QByteArray result;
-    //char counter = 0xFF;
-
-    //result.append(counter);
-    result.append(index);
-    result.append(type);
-    result.append(value);
-
-    return result; // return result - ok
+    QDataStream Raskalov(&result, QIODevice::WriteOnly);
+    Raskalov << index << type << &VP->indexRP
+                              << &VP->eventSET
+                              << &VP->eventZERO
+                              << &VP->eventCHANGE;
+    return result;
+    /*
+     * It is able to compile        - ok
+     * Data stream                  - ok
+     * var Parameters as argument   - ok
+     * return result                - ok
+     */
 }
 
 QByteArray Parser::compileVariables(QStringList *str){
     QByteArray        result;
     a                 headers;
     QList<QByteArray> listA6;  // последовательность подструктур типа A6
+    QStringList       code = *str;
 
     // копирование из checkVariables
 
@@ -76,7 +79,7 @@ QByteArray Parser::compileVariables(QStringList *str){
 
     // search type declaration
     QStringList::iterator sit;
-    for(sit = str->begin(); sit != str->end(); ++sit){
+    for(sit = code.begin(); sit != code.end(); ++sit){
         while ((pos = erx.indexIn(*sit, pos)) != -1) {
              types << erx.cap(1);
              list << erx.cap(2);
@@ -92,6 +95,9 @@ QByteArray Parser::compileVariables(QStringList *str){
     // Let's sort variables;
     QStringList::iterator it;
     QString name, type, value;
+    quint8  assignment;                // variable Register Port // 0x04 0x40 0x80
+
+    varParameters VP;
 
     for(it=vars.begin(); it!=vars.end(); ++it){
         QString all = *it;
@@ -104,8 +110,15 @@ QByteArray Parser::compileVariables(QStringList *str){
         if(indexRgPort>=0){name  = erx_rgPort.cap(1);
         }else{name = erxVarName.cap(0);}
 
+        index        = this->varIndexes.take(name);
+        assignment   = this->varTypes.take(index);
+        // taking variable index and type - ok.
+
+        listA6.append(packVariable(index, assignment, &VP));
     }
 
+    quint16 programID = 0xFF;
+    result.append(headers.A6(0xFF, 0x11, programID, &listA6));
 
     return result;
 }
@@ -630,7 +643,7 @@ void Parser::splitStr(QString str, QList<QString> &atoms){
     }
 }
 
-QByteArray  compileBlock(QStringList &block){
+QByteArray Parser::compileBlock(QStringList &block){
     QByteArray result;
 
     return result;

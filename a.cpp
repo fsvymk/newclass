@@ -6,6 +6,14 @@
 
 //HEADERS like A1 A2 A3 A4 A5 A6 and other.
 
+varParameters::varParameters(){
+    this->eventCHANGE   =0;
+    this->eventSET      =0;
+    this->eventZERO     =0;
+
+    this->indexRP       =0;
+}
+
 a::a()
 {
 

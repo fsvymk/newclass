@@ -19,7 +19,10 @@ SOURCES += main.cpp\
     vartypes.cpp \
     sems.cpp \
     atom.cpp \
-    a.cpp
+    a.cpp \
+    module.cpp \
+    variable.cpp \
+    procedure.cpp
 
 HEADERS  += mainwindow.h \
     parser.h \
@@ -28,7 +31,10 @@ HEADERS  += mainwindow.h \
     parserdefs.h \
     sems.h \
     atom.h \
-    a.h
+    a.h \
+    module.h \
+    variable.h \
+    procedure.h
 
 FORMS    += mainwindow.ui
 

@@ -3,6 +3,15 @@
 
 #include <QByteArray>
 
+class varParameters{
+public:
+    quint16 indexRP;           // zero is cool too.
+    quint16 eventSET;
+    quint16 eventZERO;
+    quint16 eventCHANGE;
+    varParameters();
+};
+
 class a
 {
 public:
