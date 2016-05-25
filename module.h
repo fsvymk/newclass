@@ -10,9 +10,8 @@ public:
     QStringList             code;
     QByteArray              compiled;
     QList<variable>         variables;
-    module(QStringList *code, QMap<QString, quint8>       *variablesIndexBase);
+    module(QStringList *code);
 
-    QMap<QString, quint8>   variablesIndexBase;
     // methods:
 
     void compile();

@@ -1,12 +1,10 @@
 #include "module.h"
 #include "vartypes.h"
 
-module::module(QStringList *code, QMap<QString, quint8> *variablesIndexBase)
+module::module(QStringList *code)
 {
     this->code                  = *code;
-    this->variablesIndexBase    = *variablesIndexBase;
 }
-
 
 void module::prepareVariables(){
     QStringList::iterator it;
@@ -45,13 +43,12 @@ void module::prepareVariables(){
                     }else{
                         // error. undefined assignment.
                     }
-                }else{v.name = testVarName.cap(0);}
-
-                v.indexBase = &this->variablesIndexBase;
+                }else{
+                    v.assign    = 4;
+                    v.name      = testVarName.cap(0);
+                }
 
                 this->variables.append(v);
-                //index        = this->varIndexes.take(name);
-                //assignment   = this->varTypes.take(index);
             }
 
         }

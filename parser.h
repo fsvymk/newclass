@@ -52,7 +52,11 @@ QString    hwSequenceCompiledHex;
 
     // OOP is good;
     QList<module> Modules;      // все модули из программы
+    QMap<QString, quint8> varIndexes;
+    QMap<quint8, quint8> varTypes;    // 04 - default, 40 - register, 80 - port
 
+    QHash<QString, quint16> registerHash;
+    QHash<QString, quint16> portHash;
 private:
     QStringList includeFiles;   // Имена файлов
     QStringList includes;       // Содержимое инклудов, независимо от происхождения
@@ -69,11 +73,7 @@ private:
     QStringList variables;  // variables, position is index.
     QMap<QString, QString> varMap; // variable and expression at definition time.
 
-    QMap<QString, quint8> varIndexes;
-    QMap<quint8, quint8> varTypes;    // 04 - default, 40 - register, 80 - port
 
-    QHash<QString, quint16> registerHash;
-    QHash<QString, quint16> portHash;
 
     QMap<QString, int> parserSems;        // Семафоры.
 

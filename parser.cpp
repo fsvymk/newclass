@@ -1003,7 +1003,7 @@ QByteArray Parser::compileModule(QString key){
 void Parser::takeModules(){
     QHash<QString, QStringList>::iterator it;
     for(it = this->sorted.begin(); it != this->sorted.end(); ++it){
-        module M(&it.value(), &this->varIndexes);
+        module M(&it.value());
         this->Modules.append(M);
     }
 }
@@ -1050,6 +1050,13 @@ int Parser::compile(){
 
     QList<module>::iterator mit;
     for(mit=this->Modules.begin(); mit!=this->Modules.end(); ++mit){
-        mit->compile();
+        mit->prepareVariables();
+        QList<variable>::iterator vit;
+        //let's to set variables indexes
+        for(vit=mit->variables.begin();    vit!=mit->variables.end(); ++vit){
+            vit->index = this->varIndexes.take(vit->name);
+        }
     }
+
+    compileHWS();
 }

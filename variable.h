@@ -15,7 +15,7 @@ public:
 
     //
 
-    QMap<QString, quint8>  *indexBase;
+    QMap<QString, quint8>  indexBase;
     QString         name;
 
     // methods:
