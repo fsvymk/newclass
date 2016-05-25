@@ -13,6 +13,7 @@
 #include "atom.h"
 
 #include "mainwindow.h"
+#include "a.h"
 
 // #include "../sid/sid.h"
 
@@ -34,6 +35,104 @@ int Parser::checkDefines(QString *str){
         script = script.right(script.length() - StepArgs.length());
     }
     return 0;
+}
+
+QByteArray Parser::packVariable(quint8 index, quint8 type, quint32 value){
+    // It is devoted to Raskalov the roofer.
+    QByteArray result;
+    //char counter = 0xFF;
+
+    //result.append(counter);
+    result.append(index);
+    result.append(type);
+    result.append(value);
+
+    return result; // return result - ok
+}
+
+QByteArray Parser::compileVariables(QStringList *str){
+    QByteArray result;
+    a          headers;
+
+    // копирование из checkVariables
+
+    int varCount    = 0;
+    int index   = 0;
+
+    VarTypes VT;
+
+    QRegExp rx(VT.getRegExpQueue()+"[\\s+](\\w+)");            // deprecated
+
+    QRegExp erx(VT.getRegExpQueue()+"[\\s\\t]*([^\\n]*)\\;"); // тип - все остальное (кроме перевода строки), а в конце ;
+    QRegExp erx_rgPort("([\\w\\d\\_]*)[\\s\\t]*\\:[\\s\\t]*(port|rg)[\\s\\t]*\\:[\\s\\t]*([\\w\\d\\_]*)"); // имя : порт : номер
+    QRegExp erxVarName("\\w+");                              // имя
+
+    QStringList types;
+    QStringList list;
+    QStringList vars;
+
+    int pos = 0;
+
+    // search type declaration
+    QStringList::iterator sit;
+    for(sit = str->begin(); sit != str->end(); ++sit){
+        while ((pos = erx.indexIn(*sit, pos)) != -1) {
+             types << erx.cap(1);
+             list << erx.cap(2);
+             pos += erx.matchedLength();
+
+             vars << erx.cap(2).split(","); // ищем объявления разделенные запятой внутри одной строки.
+
+             // this->variables << vars; // не сохраняем в экземпляр парсера, вместо этого выдаем через return
+        }
+    }
+    //this->variables.removeDuplicates(); // --
+
+    // Let's sort variables;
+    QStringList::iterator it;
+    QString name, type, value;
+
+    for(it=vars.begin(); it!=vars.end(); ++it){
+        QString all = *it;
+        int indexRgPort  =  erx_rgPort.indexIn(*it);
+
+        // unused
+        //int indexVarName = erxVarName.indexIn(*it);
+        //int countRgPort  = erx_rgPort.captureCount();
+        //int countVarName = erxVarName.captureCount();
+
+        int iType = 4;
+
+        if(indexRgPort>=0)
+        {
+            name  = erx_rgPort.cap(1);
+            type  = erx_rgPort.cap(2); // nothing, register, port
+            value = erx_rgPort.cap(3);
+
+            this->varMap.insert(name, value + " (" + type + ")");
+
+            if(type=="rg")      iType = 40;
+            if(type=="port")    iType = 80;
+
+            index++;
+            if(index>254) { /*error: index overflow */ }
+            this->varIndexes.insert(name, index);
+            this->varTypes.insert(index, iType);
+
+        }else
+            {
+                index++;
+                name = erxVarName.cap(0);
+                this->varMap.insert(name, "");
+
+                this->varIndexes.insert(name, index);
+                this->varTypes.insert(index, iType);
+            }
+
+    }
+
+
+    return result;
 }
 
 int Parser::checkVariables(QString *str){
@@ -900,6 +999,17 @@ int Parser::loadIncludes(){
     this->script.prepend(included); // nice.
 }
 
+QByteArray Parser::compileModule(QString key){
+    QStringList M = this->sorted.take(key);
+    QByteArray result;
+
+    QByteArray VARS = compileVariables(&M);
+    result.append(VARS);
+
+    result.append("0");
+    return result;
+}
+
 int Parser::compile(){
     // WiFi b1212556789
 
@@ -936,4 +1046,6 @@ int Parser::compile(){
 
 
     compileHWS();
+
+    QByteArray firstGrape = compileModule("KPA_IP3");
 }

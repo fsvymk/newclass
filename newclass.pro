@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     analize.cpp \
     vartypes.cpp \
     sems.cpp \
-    atom.cpp
+    atom.cpp \
+    a.cpp
 
 HEADERS  += mainwindow.h \
     parser.h \
@@ -26,7 +27,8 @@ HEADERS  += mainwindow.h \
     vartypes.h \
     parserdefs.h \
     sems.h \
-    atom.h
+    atom.h \
+    a.h
 
 FORMS    += mainwindow.ui
 
