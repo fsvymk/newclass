@@ -10,7 +10,7 @@ public:
     QStringList         code;
     QByteArray          compiled;
     QList<variable>     variables;
-    module();
+    module(QStringList *code);
 
     // methods:
 

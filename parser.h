@@ -7,6 +7,8 @@
 #include <QHash>
 #include <QXmlStreamReader>
 
+
+#include "module.h"
 #include "a.h" //varParametes - ok
 
 class Parser{
@@ -48,6 +50,9 @@ QString    hwSequenceCompiledHex;
 
     void testCase01();
 
+    // OOP is good;
+    QList<module> Modules;      // все модули из программы
+
 private:
     QStringList includeFiles;   // Имена файлов
     QStringList includes;       // Содержимое инклудов, независимо от происхождения
@@ -77,6 +82,7 @@ private:
     int         loadIncludes();
 
 
+    void        takeModules();
     QByteArray  packVariable(quint8 index, quint8 type, varParameters *VP);
     QByteArray  compileVariables(QStringList *str);
     QByteArray  compileModule(QString key);

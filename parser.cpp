@@ -15,6 +15,8 @@
 #include "mainwindow.h"
 #include "a.h"
 
+#include "module.h"
+
 #include <QtCore/qatomic_x86.h>
 
 int Parser::checkDefines(QString *str){
@@ -998,6 +1000,10 @@ QByteArray Parser::compileModule(QString key){
     return result;
 }
 
+void        takeModules(){
+
+}
+
 int Parser::compile(){
     // WiFi b1212556789
 
@@ -1012,6 +1018,7 @@ int Parser::compile(){
     //this->splitBlocks(*script); // temporary off
 
     this->classify(&this->script, &this->sorted, PARSER_QREGEXP_MODULE);
+    this->takeModules();
 
     this->classify(&this->script, &this->hwSequence, PARSER_QREGEXP_HW_SEQUENCE);
 
@@ -1035,5 +1042,5 @@ int Parser::compile(){
 
     compileHWS();
 
-    QByteArray firstGrape = compileModule("KPA_IP3");
+    //QByteArray firstGrape = compileModule("KPA_IP3"); //died
 }

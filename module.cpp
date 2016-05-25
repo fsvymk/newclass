@@ -1,15 +1,15 @@
 #include "module.h"
 #include "vartypes.h"
 
-module::module()
+module::module(QStringList *code)
 {
-
+    this->code = *code;
 }
 
 void module::compile(){
     this->compiled.clear();
     QByteArray *R = &this->compiled;
-
+    prepareVariables();
     R->append("\n\n");
 }
 
