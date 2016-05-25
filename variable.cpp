@@ -18,3 +18,7 @@ QByteArray variable::A6(){
                               << this->VP.eventCHANGE;
     return result;
 }
+
+void variable::getIndex(){
+
+}

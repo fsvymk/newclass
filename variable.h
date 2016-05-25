@@ -13,10 +13,16 @@ public:
     quint8          assign; // variable 4, register 40, port 80
     varParameters   VP;
 
+    //
+
+    QMap<QString, quint8>  *indexBase;
+    QString         name;
+
     // methods:
     variable();
 
-    QByteArray A6();
+    void        getIndex();
+    QByteArray  A6();
 };
 
 #endif // VARIABLE_H

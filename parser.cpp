@@ -1003,7 +1003,8 @@ QByteArray Parser::compileModule(QString key){
 void Parser::takeModules(){
     QHash<QString, QStringList>::iterator it;
     for(it = this->sorted.begin(); it != this->sorted.end(); ++it){
-        this->Modules.append(&it.value());
+        module M(&it.value(), &this->varIndexes);
+        this->Modules.append(M);
     }
 }
 
