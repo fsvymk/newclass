@@ -15,6 +15,8 @@ public:
 
     // methods:
     variable();
+
+    QByteArray A6();
 };
 
 #endif // VARIABLE_H
