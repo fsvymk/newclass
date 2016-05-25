@@ -85,7 +85,7 @@ private:
     void        takeModules();
     QByteArray  packVariable(quint8 index, quint8 type, varParameters *VP);
     QByteArray  compileVariables(QStringList *str);
-    QByteArray  compileModule(QString key);
+    QByteArray  compileModule();
     QString     QStringList_print(QStringList list);
     bool        parseSem(QXmlStreamReader &xml, QMap<QString, int> &sems);
     QString     displaySems(QMap<QString, int> &sems);

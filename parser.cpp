@@ -989,7 +989,7 @@ int Parser::loadIncludes(){
     this->script.prepend(included); // nice.
 }
 
-QByteArray Parser::compileModule(QString key){
+QByteArray Parser::compileModule(){
     QList<module>::iterator mit;
     for(mit=this->Modules.begin(); mit!=this->Modules.end(); ++mit){
         mit->prepareVariables();
@@ -1045,19 +1045,8 @@ int Parser::compile(){
     int cVr = this->checkVariables(script);
 
 
-    compileHWS();
 
-    //QByteArray firstGrape = compileModule("KPA_IP3"); // fuckup)
-
-    QList<module>::iterator mit;
-    for(mit=this->Modules.begin(); mit!=this->Modules.end(); ++mit){
-        mit->prepareVariables();
-        QList<variable>::iterator vit;
-        //let's to set variables indexes
-        for(vit=mit->variables.begin();    vit!=mit->variables.end(); ++vit){
-            vit->index = this->varIndexes.take(vit->name);
-        }
-    }
+    compileModule();
 
     compileHWS();
 }
