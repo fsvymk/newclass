@@ -1006,10 +1006,11 @@ void Parser::compileModule(){
 }
 
 void Parser::takeModules(){
+    int cnt = 0;
     QHash<QString, QStringList>::iterator it;
     for(it = this->sorted.begin(); it != this->sorted.end(); ++it){
         module M(&it.value(), &this->indexBase);
-
+        M.id = cnt; cnt++;
         this->Modules.append(M);
     }
 }

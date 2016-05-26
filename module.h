@@ -14,8 +14,14 @@ public:
     module(QStringList      *code, QStringList *indexBase);
     QStringList             indexBase;
 
-    // methods:
+    // A6 parts:
 
+    unsigned char           primary;
+    unsigned char           secondary;
+    unsigned char           id;
+
+    // methods:
+    void takePrimary();
     void compile();
     void prepareVariables();
 };

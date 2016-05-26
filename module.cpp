@@ -11,16 +11,25 @@ module::module(QStringList *code, QStringList *indexBase)
 QByteArray module::A6(){
     QByteArray result;
     QByteArray header;
-    quint16 CRC16;
-
     QDataStream An(result);
+
+    quint16 CRC16 = 0xF0F0;
+
+    unsigned char counter = 0xEE;
+    unsigned char typeId  = 0x11;
+
+    header.append(counter);
+    header.append(typeId);
+    header.append(this->primary);
+    header.append(this->id);
+
+    An << header;
 
     QList<variable>::iterator it;
     for(it = this->variables.begin(); it != this->variables.end(); ++it){
         An << *it->A6();
     }
 
-    CRC16 = 0xF0F0;
     An << CRC16;
     return result;
 }
@@ -67,19 +76,24 @@ void module::prepareVariables(){
                     v.assign    = 4;
                     v.name      = testVarName.cap(0);
                 }
-
                 v.index = this->indexBase.indexOf(v.name);
                 this->variables.append(v);
-
             }
         }
     }
 }
 
+void module::takePrimary(){
+    QRegExp QRPrimary("module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)");
+    QRPrimary.indexIn(this->code[0]);
+}
+
 void module::compile(){
     this->compiled.clear();
     QByteArray *R = &this->compiled;
+    takePrimary();
     prepareVariables();
+
 
     R->append("\n\n");
 }
