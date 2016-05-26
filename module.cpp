@@ -1,12 +1,13 @@
 #include "module.h"
 #include "vartypes.h"
 
-module::module(QStringList *code)
+module::module(QStringList *code, QStringList *indexBase)
 {
     this->code                  = *code;
+    this->indexBase             = *indexBase;
 }
 
-void module::prepareVariables(){
+void module::prepareVariables(QStringList indexes){
     QStringList::iterator it;
     VarTypes VT;
     QRegExp testDefinition(VT.getRegExpQueue() + "[\\s\\t]*([^\\n]*)\\;");
@@ -58,6 +59,6 @@ void module::prepareVariables(){
 void module::compile(){
     this->compiled.clear();
     QByteArray *R = &this->compiled;
-    prepareVariables();
+    prepareVariables(this->indexBase);
     R->append("\n\n");
 }

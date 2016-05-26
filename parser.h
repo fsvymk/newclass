@@ -71,6 +71,8 @@ private:
     QByteArray hwSequenceCompiled;
 
     QStringList variables;  // variables, position is index.
+    QStringList indexBase;  // It's the same, but without shit
+
     QMap<QString, QString> varMap; // variable and expression at definition time.
 
 

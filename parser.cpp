@@ -192,7 +192,7 @@ int Parser::checkVariables(QString *str){
                 this->varIndexes.insert(name, index);
                 this->varTypes.insert(index, iType);
             }
-
+        this->indexBase.append(name); // Great! It is indexes of variables.
     }
     return varCount;
 }
@@ -996,7 +996,10 @@ void Parser::compileModule(){
     int i = 0;
 
     for(i=0;i<n;i++){
-        int         nn = this->Modules.at(i).variables.count();
+
+        this->Modules[i].prepareVariables(this->variables);
+
+        int         nn = this->Modules.at(i).variables.size();
         int         ii = 0;
         quint8      index;
         QString     name;
@@ -1014,7 +1017,8 @@ void Parser::compileModule(){
 void Parser::takeModules(){
     QHash<QString, QStringList>::iterator it;
     for(it = this->sorted.begin(); it != this->sorted.end(); ++it){
-        module M(&it.value());
+        module M(&it.value(), &this->variables);
+
         this->Modules.append(M);
     }
 }
@@ -1032,10 +1036,7 @@ int Parser::compile(){
     this->init();
     //this->splitBlocks(*script); // temporary off
 
-    this->classify(&this->script, &this->sorted, PARSER_QREGEXP_MODULE);
-    this->takeModules();
 
-    this->classify(&this->script, &this->hwSequence, PARSER_QREGEXP_HW_SEQUENCE);
 
     // теперь код поблочно лежит в контейнере sorted.
     //
@@ -1053,6 +1054,10 @@ int Parser::compile(){
 
     // Составить таблицу переменных.
     int cVr = this->checkVariables(script);
+
+    this->classify(&this->script, &this->sorted, PARSER_QREGEXP_MODULE);
+    this->takeModules();
+    this->classify(&this->script, &this->hwSequence, PARSER_QREGEXP_HW_SEQUENCE);
 
     compileHWS();
 

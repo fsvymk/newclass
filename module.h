@@ -10,12 +10,13 @@ public:
     QStringList             code;
     QByteArray              compiled;
     QList<variable>         variables;
-    module(QStringList *code);
+    module(QStringList *code, QStringList *indexBase);
+    QStringList             indexBase;
 
     // methods:
 
     void compile();
-    void prepareVariables();
+    void prepareVariables(QStringList indexes);
 };
 
 #endif // MODULE_H
