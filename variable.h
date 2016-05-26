@@ -11,6 +11,7 @@ public:
     // Structure:
     quint8          index;
     quint8          assign; // variable 4, register 40, port 80
+    quint16         portNumber;
     varParameters   VP;
 
     //

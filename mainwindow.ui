@@ -32,7 +32,12 @@
 #include “kpa_config.h”				
 				
 #define HW_SEQ_MKT_2    0x0002				
-#define HW_SEQ_CTRL_ROOT    0x0004				
+#define HW_SEQ_CTRL_ROOT    0x0004	
+
+#define KPA_IP1 0xDA
+#define KPA_IP2 0xDB
+#define KPA_IP3 0xDC
+#define KPA_IP4 0xDD
 				
 HW_SEQUENCE (HW_SEQ_CTRL_ROOT) {				
     KPA_2M2C_0:0, 				

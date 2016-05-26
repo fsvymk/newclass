@@ -22,6 +22,7 @@ public:
     void        init();
     void        initSems();
     int         compile();
+    unsigned char getDefine(QString name);
     QString     script;
     QByteArray  byteCode;
     QStringList errors;

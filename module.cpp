@@ -11,12 +11,12 @@ module::module(QStringList *code, QStringList *indexBase)
 QByteArray module::A6(){
     QByteArray result;
     QByteArray header;
-    QDataStream An(result);
+    QDataStream An(&result, QIODevice::WriteOnly);
 
     quint16 CRC16 = 0xF0F0;
 
-    unsigned char counter = 0xEE;
-    unsigned char typeId  = 0x11;
+    quint8 counter = 0xEE;
+    quint8 typeId  = 0x11;
 
     header.append(counter);
     header.append(typeId);
@@ -38,7 +38,7 @@ void module::prepareVariables(){
     QStringList::iterator it;
     VarTypes VT;
     QRegExp testDefinition(VT.getRegExpQueue() + "[\\s\\t]*([^\\n]*)\\;");
-    QRegExp testRgPort("([\\w\\d\\_]*)[\\s\\t]*\\:[\\s\\t]*(port|rg)[\\s\\t]*\\:[\\s\\t]*([\\w\\d\\_]*)"); // имя : порт : номер
+    QRegExp testRgPort("([\\w\\d\\_]*)[\\s\\t]*\\:[\\s\\t]*(port|rg)[\\s\\t]*\\:[\\s\\t]*([\\w\\d\\_]*)"); // иЗя : порт : номер
     QRegExp testVarName("\\w+");
 
     for(it=this->code.begin(); it!=this->code.end(); ++it){
@@ -83,6 +83,8 @@ void module::prepareVariables(){
     }
 }
 
+
+// will not used;
 void module::takePrimary(){
     QRegExp QRPrimary("module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)");
     QRPrimary.indexIn(this->code[0]);
@@ -91,10 +93,7 @@ void module::takePrimary(){
 
 void module::compile(){
     this->compiled.clear();
-    QByteArray *R = &this->compiled;
-    takePrimary();
+    QDataStream R(this->compiled);
     prepareVariables();
-
-
-    R->append("\n\n");
+    R << this->A6();
 }

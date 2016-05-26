@@ -1001,8 +1001,14 @@ void Parser::compileModule(){
         // Module method compile() must to do it.
 
         this->Modules[i].compile();
+
     }
 
+}
+
+unsigned char Parser::getDefine(QString name){
+    bool ok;
+    return this->defines.take(name).toInt(&ok, 16);
 }
 
 void Parser::takeModules(){
@@ -1013,8 +1019,8 @@ void Parser::takeModules(){
         QString primary = it.key();
         M.id        = cnt; cnt++;
 
-        bool ok;
-        M.primary   = this->defines.take(primary).toInt(&ok, 16);
+        unsigned char rr = getDefine(primary);
+        M.primary   = rr;   // first argument of module(,)
         this->Modules.append(M);
     }
 }

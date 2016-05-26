@@ -5,10 +5,10 @@
 
 class varParameters{
 public:
-    quint16 indexRP;
-    quint16 eventSET;
-    quint16 eventZERO;
-    quint16 eventCHANGE;
+    quint32 indexRP;
+    quint32 eventSET;
+    quint32 eventZERO;
+    quint32 eventCHANGE;
     varParameters();
 };
 
