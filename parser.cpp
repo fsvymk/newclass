@@ -1014,7 +1014,7 @@ void Parser::takeModules(){
         M.id        = cnt; cnt++;
 
         bool ok;
-        M.primary   = this->defines.take(primary).toInt(ok, 16);
+        M.primary   = this->defines.take(primary).toInt(&ok, 16);
         this->Modules.append(M);
     }
 }
