@@ -997,24 +997,10 @@ void Parser::compileModule(){
 
     for(i=0;i<n;i++){
 
-        // there are wrong space to compile module.
-        // Module method compile() must do it.
+        // there are wrong space to compile module directly.
+        // Module method compile() must to do it.
 
-        this->Modules[i].prepareVariables(this->variables);
-
-        /*
-        int         nn = this->Modules.at(i).variables.size();
-        int         ii = 0;
-        quint8      index;
-        QString     name;
-
-        for(ii=0; ii<nn; ++ii){
-            name    = this->Modules.at(i).variables.at(ii).name;
-            index   = this->varIndexes.take(name);
-
-            qDebug() << name;
-        }
-        */
+        this->Modules[i].compile();
     }
 
 }
@@ -1022,7 +1008,7 @@ void Parser::compileModule(){
 void Parser::takeModules(){
     QHash<QString, QStringList>::iterator it;
     for(it = this->sorted.begin(); it != this->sorted.end(); ++it){
-        module M(&it.value(), &this->variables);
+        module M(&it.value(), &this->indexBase);
 
         this->Modules.append(M);
     }

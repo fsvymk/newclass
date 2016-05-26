@@ -1,5 +1,6 @@
 #include "module.h"
 #include "vartypes.h"
+#include "QDataStream"
 
 module::module(QStringList *code, QStringList *indexBase)
 {
@@ -7,7 +8,24 @@ module::module(QStringList *code, QStringList *indexBase)
     this->indexBase             = *indexBase;
 }
 
-void module::prepareVariables(QStringList indexes){
+QByteArray module::A6(){
+    QByteArray result;
+    QByteArray header;
+    quint16 CRC16;
+
+    QDataStream An(result);
+
+    QList<variable>::iterator it;
+    for(it = this->variables.begin(); it != this->variables.end(); ++it){
+        An << *it->A6();
+    }
+
+    CRC16 = 0xF0F0;
+    An << CRC16;
+    return result;
+}
+
+void module::prepareVariables(){
     QStringList::iterator it;
     VarTypes VT;
     QRegExp testDefinition(VT.getRegExpQueue() + "[\\s\\t]*([^\\n]*)\\;");
@@ -20,7 +38,7 @@ void module::prepareVariables(QStringList indexes){
             QString type = testDefinition.cap(1);
             QString defs = testDefinition.cap(2);
 
-            QStringList listCommaSplitted = defs.split("\,");
+            QStringList listCommaSplitted = defs.split("\\,");
             variable v;
 
             QStringList::iterator it;
@@ -32,6 +50,7 @@ void module::prepareVariables(QStringList indexes){
 
                 if(indexRgPort >= 0){
                     v.name                  = testRgPort.cap(1);
+
                     QString assignment      = testRgPort.cap(2);
                     QString address         = testRgPort.cap(3);
                     if(assignment=="port"){
@@ -49,9 +68,10 @@ void module::prepareVariables(QStringList indexes){
                     v.name      = testVarName.cap(0);
                 }
 
+                v.index = this->indexBase.indexOf(v.name);
                 this->variables.append(v);
-            }
 
+            }
         }
     }
 }
@@ -59,6 +79,7 @@ void module::prepareVariables(QStringList indexes){
 void module::compile(){
     this->compiled.clear();
     QByteArray *R = &this->compiled;
-    prepareVariables(this->indexBase);
+    prepareVariables();
+
     R->append("\n\n");
 }

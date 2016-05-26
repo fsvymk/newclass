@@ -31,9 +31,8 @@ HW_SEQUENCE (HW_SEQ_MKT_2) {
 
 #define IP1_UPDATE EVENT_L00
 
-module  (  KPA_IP1  ,  SEQ_CTRL_ROOT    )       {
-
-        procedure ( IP1_UPDATE) {
+module (KPA_IP1,  SEQ_CTRL_ROOT){
+        procedure (IP1_UPDATE){
                 A := Ctrl;
                 Ctrl := A & 0xFFFE;
                 rg[11] := Vx + dVx;
