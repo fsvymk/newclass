@@ -10,7 +10,7 @@ module::module(QStringList *code, QStringList *indexBase)
 
 QByteArray module::A6(){
     QByteArray result;
-    QByteArray header;
+
     QDataStream An(&result, QIODevice::WriteOnly);
 
     quint16 CRC16 = 0xF0F0;
@@ -18,12 +18,7 @@ QByteArray module::A6(){
     quint8 counter = 0xEE;
     quint8 typeId  = 0x11;
 
-    header.append(counter);
-    header.append(typeId);
-    header.append(this->primary);
-    header.append(this->id);
-
-    An << header;
+    An << counter << typeId << this->primary << this->id;
 
     QList<variable>::iterator it;
     for(it = this->variables.begin(); it != this->variables.end(); ++it){
@@ -32,6 +27,26 @@ QByteArray module::A6(){
 
     An << CRC16;
     return result;
+}
+
+
+QString module::toHex(){
+
+    this->compiledHex.clear();
+    int n = this->compiled.size();
+    int i = 0;
+    for(i=0; i<n; i++){
+        unsigned char c = this->compiled.at(i);
+        QString hex = QString::number(c, 16);
+
+        if(i%4 == 0) this->compiledHex.append("  ");
+        if(i%8 == 0) this->compiledHex.append("   ");
+        if(i%16 == 0) this->compiledHex.append("\n");
+        if(c<16) this->compiledHex.append("0");
+        this->compiledHex.append(hex + " ");
+    }
+
+    return this->compiledHex;
 }
 
 void module::prepareVariables(){
@@ -92,8 +107,9 @@ void module::takePrimary(){
 }
 
 void module::compile(){
-    this->compiled.clear();
+    //this->compiled.clear();
     QDataStream R(this->compiled);
     prepareVariables();
+    QByteArray RRR = this->A6();
     R << this->A6();
 }

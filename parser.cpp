@@ -1001,7 +1001,7 @@ void Parser::compileModule(){
         // Module method compile() must to do it.
 
         this->Modules[i].compile();
-
+        this->modulesHex.append(this->Modules[i].compiledHex);
     }
 
 }

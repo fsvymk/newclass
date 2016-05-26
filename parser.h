@@ -47,6 +47,7 @@ public:
     void        splitStr(QString str, QList<QString> &atoms);
     QByteArray  compileBlock(QStringList block);
 QString    hwSequenceCompiledHex;
+QString    modulesHex;
     // TEST:
 
     void testCase01();

@@ -24,6 +24,6 @@ void MainWindow::on_pushButton_clicked()
     P.script = ui->plainTextEdit->toPlainText();
     int i = P.compile();
 
-    QString output = P.hwSequenceCompiledHex;
+    QString output = P.hwSequenceCompiledHex + P.modulesHex;
     ui->plainTextEdit_2->appendPlainText(output);
 }

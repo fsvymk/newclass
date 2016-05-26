@@ -14,6 +14,8 @@ public:
     module(QStringList      *code, QStringList *indexBase);
     QStringList             indexBase;
 
+    QString                 compiledHex;
+
     // A6 parts:
 
     unsigned char           primary;
@@ -21,9 +23,10 @@ public:
     unsigned char           id;
 
     // methods:
-    void takePrimary();
-    void compile();
-    void prepareVariables();
+    QString                 toHex();
+    void                    takePrimary();
+    void                    compile();
+    void                    prepareVariables();
 };
 
 #endif // MODULE_H
