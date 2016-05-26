@@ -1010,7 +1010,11 @@ void Parser::takeModules(){
     QHash<QString, QStringList>::iterator it;
     for(it = this->sorted.begin(); it != this->sorted.end(); ++it){
         module M(&it.value(), &this->indexBase);
-        M.id = cnt; cnt++;
+        QString primary = it.key();
+        M.id        = cnt; cnt++;
+
+        bool ok;
+        M.primary   = this->defines.take(primary).toInt(ok, 16);
         this->Modules.append(M);
     }
 }

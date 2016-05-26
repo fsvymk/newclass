@@ -86,6 +86,7 @@ void module::prepareVariables(){
 void module::takePrimary(){
     QRegExp QRPrimary("module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)");
     QRPrimary.indexIn(this->code[0]);
+    QString primary = QRPrimary.cap(1);
 }
 
 void module::compile(){
