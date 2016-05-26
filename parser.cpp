@@ -997,8 +997,12 @@ void Parser::compileModule(){
 
     for(i=0;i<n;i++){
 
+        // there are wrong space to compile module.
+        // Module method compile() must do it.
+
         this->Modules[i].prepareVariables(this->variables);
 
+        /*
         int         nn = this->Modules.at(i).variables.size();
         int         ii = 0;
         quint8      index;
@@ -1010,6 +1014,7 @@ void Parser::compileModule(){
 
             qDebug() << name;
         }
+        */
     }
 
 }
