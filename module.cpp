@@ -18,15 +18,14 @@ QByteArray module::A6(){
     quint8 counter = 0xEE;
     quint8 typeId  = 0x11;
         QByteArray TV;
-    An << counter << typeId << this->primary << this->id << this->varCount;
+    An << counter << typeId << this->primary << this->id;
+    An << this->varCount;
 
     QList<variable>::iterator it;
     for(it = this->variables.begin(); it != this->variables.end(); ++it){
-        // An << *it->A6(); // I have some doubts about this
-
-        //it->getIndex();
         it->prepareA6_stream();
-        An << it->atomA6;           // It must works
+        //An << it->atomA6;           // It must works. Lol, it appends quint32 QByteArray size..
+        An << *it->atomA6;
     }
 
     An << CRC16;
