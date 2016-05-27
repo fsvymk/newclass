@@ -16,10 +16,12 @@ public:
 
     //
     QString         name;
+    QByteArray      atomA6;
 
     // methods:
     variable();
-
+    void        prepareA6();
+    void        prepareA6_stream();
     void        getIndex();
     QByteArray  A6();
 };

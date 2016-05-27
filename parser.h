@@ -33,7 +33,7 @@ public:
     QHash <QString, QString> defines;
 
     void        pe(QString str);    // print error
-
+    void        testCase02();
     void        addIncludeFile(QString filename);
 
     QString     allErrors();

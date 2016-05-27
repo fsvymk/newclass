@@ -1025,10 +1025,15 @@ void Parser::takeModules(){
     }
 }
 
+void Parser::testCase02(){
+    variable v;
+    v.prepareA6();
+}
+
 int Parser::compile(){
     // WiFi b1212556789
 
-   //testCase01();return 0;
+    //testCase02();return 0;
 
     Sems semSoup;
 

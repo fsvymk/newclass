@@ -17,12 +17,15 @@ QByteArray module::A6(){
 
     quint8 counter = 0xEE;
     quint8 typeId  = 0x11;
-
-    An << counter << typeId << this->primary << this->id;
+        QByteArray TV;
+    An << counter << typeId << this->primary << this->id << this->varCount;
 
     QList<variable>::iterator it;
     for(it = this->variables.begin(); it != this->variables.end(); ++it){
-        An << *it->A6();
+        // An << *it->A6(); // I have some doubts about this
+
+        it->getIndex();
+        it->prepareA6();
     }
 
     An << CRC16;
@@ -96,6 +99,7 @@ void module::prepareVariables(){
             }
         }
     }
+    this->varCount = this->variables.size();
 }
 
 
