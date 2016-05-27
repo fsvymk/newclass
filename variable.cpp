@@ -6,7 +6,7 @@
 
 variable::variable()
 {
-    this->atomA6.resize(16);
+    //this->atomA6.resize(16);
 }
 
 QByteArray variable::A6(){
@@ -34,15 +34,10 @@ void variable::prepareA6_stream(){
     QDataStream atom(&this->atomA6, QIODevice::WriteOnly);
     atom << this->index;
     atom << this->assign;
-    /*
-    this->atomA6.clear();
-    this->atomA6.append(this->index);
-    this->atomA6.append(this->assign);
-    this->atomA6.append(this->VP.indexRP);
-    this->atomA6.append(this->VP.eventSET);
-    this->atomA6.append(this->VP.eventZERO);
-    this->atomA6.append(this->VP.eventCHANGE);
-    */
+    atom << this->VP.indexRP;
+    atom << this->VP.eventSET;
+    atom << this->VP.eventZERO;
+    atom << this->VP.eventCHANGE;
 }
 
 void variable::getIndex(){

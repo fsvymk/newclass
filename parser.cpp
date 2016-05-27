@@ -1027,7 +1027,15 @@ void Parser::takeModules(){
 
 void Parser::testCase02(){
     variable v;
-    v.prepareA6();
+    v.index          = 240;
+    v.assign         = 40;
+    v.portNumber     = 7;
+    v.VP.eventCHANGE = 1048576;
+    v.VP.eventSET    = 1048576;
+    v.VP.eventZERO   = 1048576;
+    v.VP.indexRP     = 16384;
+    //v.prepareA6();
+    v.prepareA6_stream();
 }
 
 int Parser::compile(){

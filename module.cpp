@@ -24,8 +24,9 @@ QByteArray module::A6(){
     for(it = this->variables.begin(); it != this->variables.end(); ++it){
         // An << *it->A6(); // I have some doubts about this
 
-        it->getIndex();
-        it->prepareA6();
+        //it->getIndex();
+        it->prepareA6_stream();
+        An << it->atomA6;           // It must works
     }
 
     An << CRC16;
