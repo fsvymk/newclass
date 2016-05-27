@@ -11,7 +11,7 @@ module::module(QStringList *code, QStringList *indexBase)
 QByteArray module::A6(){
     QByteArray result;
 
-    QDataStream An(&result, QIODevice::WriteOnly);
+    QDataStream An(&result, QIODevice::ReadWrite);
 
     quint16 CRC16 = 0xF0F0;
 
@@ -111,5 +111,10 @@ void module::compile(){
     QDataStream R(this->compiled);
     prepareVariables();
     QByteArray RRR = this->A6();
-    R << this->A6();
+
+    this->compiled.append(RRR);
+
+    //this->compiledHex.append(this->code.at(0));
+    this->compiledHex.append(this->toHex());
+    //R << this->A6();
 }
