@@ -27,3 +27,8 @@ void MainWindow::on_pushButton_clicked()
     QString output = P.hwSequenceCompiledHex + "\n" + P.modulesHex;
     ui->plainTextEdit_2->appendPlainText(output);
 }
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->plainTextEdit_2->clear();
+}

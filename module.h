@@ -8,21 +8,22 @@ class module
 {
 public:
     QStringList             code;
-    QByteArray              A6();
     QByteArray              compiled;
     QList<variable>         variables;
-    module(QStringList      *code, QStringList *indexBase);
     QStringList             indexBase;
-
     QString                 compiledHex;
+    QString                 name;
 
     // A6 parts:
 
     unsigned char           primary;
     unsigned char           secondary;
     unsigned char           id;
+    quint16                 varCount;
 
     // methods:
+    module(QStringList      *code, QStringList *indexBase);
+    QByteArray              A6();
     QString                 toHex();
     void                    takePrimary();
     void                    compile();

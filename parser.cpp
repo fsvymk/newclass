@@ -1064,4 +1064,6 @@ int Parser::compile(){
     compileHWS();
 
     compileModule();
+
+    //compileHWS();
 }

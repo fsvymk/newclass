@@ -62,7 +62,7 @@ void module::prepareVariables(){
             QString type = testDefinition.cap(1);
             QString defs = testDefinition.cap(2);
 
-            QStringList listCommaSplitted = defs.split("\\,");
+            QStringList listCommaSplitted = defs.split("\,");
             variable v;
 
             QStringList::iterator it;
