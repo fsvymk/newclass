@@ -105,18 +105,19 @@ void module::prepareVariables(){
                     QString address         = testRgPort.cap(3);
                     if(assignment=="port"){
                         bool ok;
-                        v.assign            = 80;
+                        v.assign            = 0x80;
                         v.VP.indexRP        = address.toInt(&ok, 10);
                         v.VP.eventCHANGE    = 0x00010000;
                     }else if(assignment=="rg"){
                         bool ok;
-                        v.assign = 40;
+                        v.assign = 0x40;
                         v.VP.indexRP        = address.toInt(&ok, 10);
+
                     }else{
                         // error. undefined assignment.
                     }
                 }else{
-                    v.assign    = 4;
+                    v.assign    = 0x04;
                     v.name      = testVarName.cap(0);
                 }
                 v.index = this->indexBase.indexOf(v.name);
@@ -135,14 +136,33 @@ void module::takePrimary(){
     QString primary = QRPrimary.cap(1);
 }
 
+void module::collectHeader(){
+    QString first = this->code[0];
+    QRegExp QRPrimary("module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)");
+    int i = QRPrimary.indexIn(first);
+
+    QString arg1 = QRPrimary.cap(1);
+    QString arg2 = QRPrimary.cap(2);
+
+    //this->blockHeader.append();
+    /*
+    Счетчик	0x10
+    KPA_IP1	ID?
+    0x0002
+    0x0004
+    */
+}
+
 void module::compile(){
     //this->compiled.clear();
-    QDataStream R(this->compiled);
+    //QDataStream R(this->compiled);
     prepareVariables();
     //QByteArray RRR = this->A6();
     //this->compiled.append(RRR);
 
+    //this->collectHeader();
     this->collectA6();
+
     this->compiled.append(this->blockA6);
 
     //this->compiledHex.append(this->code.at(0));

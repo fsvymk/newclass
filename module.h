@@ -9,7 +9,9 @@ class module
 public:
     QStringList             code;
 
+    QByteArray              blockHeader;
     QByteArray              blockA6;
+    QByteArray              block18;
     QByteArray              compiled;
 
     QList<variable>         variables;
@@ -26,6 +28,7 @@ public:
 
     // methods:
     void                    collectA6();
+    void                    collectHeader();
     module(QStringList      *code, QStringList *indexBase);
     QByteArray              A6();
     QString                 toHex();

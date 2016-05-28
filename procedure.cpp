@@ -4,3 +4,11 @@ procedure::procedure()
 {
 
 }
+
+void            compileHeader(){
+
+}
+
+void            compile(){
+
+}
