@@ -37,7 +37,6 @@ QByteArray module::A6(){
     QDataStream An(&result, QIODevice::ReadWrite);
 
     quint16 CRC16 = 0xF0F0;
-
     quint8 counter = 0xEE;
     quint8 typeId  = 0x11;
         QByteArray TV;
@@ -144,6 +143,9 @@ void module::collectHeader(){
     QString arg1 = QRPrimary.cap(1);
     QString arg2 = QRPrimary.cap(2);
 
+    quint8 counter = 0xEE;
+    quint8 typeId  = 0x10;
+
     //this->blockHeader.append();
     /*
     Счетчик	0x10
@@ -151,22 +153,23 @@ void module::collectHeader(){
     0x0002
     0x0004
     */
+
+    this->blockHeader.append(counter);
+    this->blockHeader.append(typeId);
+    this->blockHeader.append(this->primary);
+    this->blockHeader.append(this->id);
+
+    this->blockHeader.append(this->procedureCount);
+    this->blockHeader.append(this->hwSequenceId);
 }
 
 void module::compile(){
-    //this->compiled.clear();
-    //QDataStream R(this->compiled);
-    prepareVariables();
-    //QByteArray RRR = this->A6();
-    //this->compiled.append(RRR);
 
-    //this->collectHeader();
+    prepareVariables();
+
     this->collectA6();
 
     this->compiled.append(this->blockA6);
 
-    //this->compiledHex.append(this->code.at(0));
     this->toHex();
-    //this->compiledHex.append(this->toHex());
-    //R << this->A6();
 }

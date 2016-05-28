@@ -19,6 +19,10 @@ public:
     QString                 compiledHex;
     QString                 name;
 
+    // block18 parts:
+    quint16                 procedureCount;
+    quint16                 hwSequenceId;
+
     // A6 parts:
 
     unsigned char           primary;
