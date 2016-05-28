@@ -2,10 +2,11 @@
 #include "vartypes.h"
 #include "QDataStream"
 
-module::module(QStringList *code, QStringList *indexBase)
+module::module(QStringList *code, QStringList *indexBase, QHash<QString, quint32> *numberDefines)
 {
     this->code                  = *code;
     this->indexBase             = *indexBase;
+    this->numberDefines         = *numberDefines;
 }
 
 void module::collectA6(){
@@ -161,15 +162,107 @@ void module::collectHeader(){
 
     this->blockHeader.append(this->procedureCount);
     this->blockHeader.append(this->hwSequenceId);
+
+}
+
+int module::whatLine(QString text, int position)
+{
+    text = text.left(position);
+    return text.count("\n"); // т.к. перед первой строкой нет перевода строки, но это уже одна строка.
+}
+
+
+void module::classify(QStringList *code, QHash<QString, QStringList> *result, QString regExp)
+// copyasted from Parser::classify(,,)
+{
+    QStringList allStrings;
+    QRegExp classRE(regExp);
+
+    QByteArray bstr  = *code->join(0x13);
+
+    QString str;
+    QString str_copy = str;
+    QString block;
+    QString excess;         // то что находится до регулярки
+    QString blockName;
+
+    QChar qc;
+
+    int     i        = 0;
+    int     lineBase = 0;
+    int     line     = 0;
+
+    unsigned int BFL = str.count("{");
+    unsigned int BFR = str.count("}");
+    unsigned int BCL = str.count("(");
+    unsigned int BCR = str.count(")");
+
+    if(BFL!=BFR){
+        //pe("Err. 1: Brakes {} are not pair.");
+        return;}
+
+    if(BCL!=BCR){
+        //pe("Err. 2: Brakes () are not pair.");
+        return;}
+
+    while(1==1)
+    {
+        i = classRE.indexIn(str);if(i<0)return;
+
+        line = whatLine(str_copy, lineBase + i) + 1;
+        blockName = classRE.cap(1);
+        int j = str.indexOf('{',i);
+
+        qc = str[j];
+
+        int bl=1;
+        int br=0;
+
+        while(bl != br)
+        {
+            j++;
+            qc = str[j];
+            if(qc=='{') bl++;
+            if(qc=='}') br++;
+        }
+
+        block = str.mid(i,j-i);
+        allStrings = block.split("\n");
+
+        result->insert(blockName, allStrings); // Here.
+
+
+
+        str = str.right(str.length()-j);
+        lineBase += j;
+        /*// deprecated
+        this->Blocks.append(block);//
+        *///
+   }
+}
+
+void module::prepareProcedures(){
+
+    // This is classify() method and we have no reason to copypaste it here.
+    /*
+    QStringList::iterator it;
+    QRegExp QRProcedure();
+    procedure P;
+    for(it=this->code.begin(); it != this->code.end(); ++it)    {
+       P.code.clear();
+
+       this->procedures.append(P);
+    }*/
+    QString MODULE_QREGEXP_PROCEDURES = "procedure";
+    this->classify(&this->code, &this->proceduresCode, MODULE_QREGEXP_PROCEDURES);
 }
 
 void module::compile(){
 
     prepareVariables();
+    prepareProcedures();
 
     this->collectA6();
-
     this->compiled.append(this->blockA6);
-
     this->toHex();
 }

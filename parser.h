@@ -31,7 +31,9 @@ public:
     QStringList values;     // deprecated
 
     QHash <QString, QString> defines;
+    QHash <QString, quint32> numberDefines;
 
+    void        definesToInt();
     void        pe(QString str);    // print error
     void        testCase02();
     void        addIncludeFile(QString filename);

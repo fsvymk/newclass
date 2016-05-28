@@ -1015,7 +1015,7 @@ void Parser::takeModules(){
     int cnt = 0;
     QHash<QString, QStringList>::iterator it;
     for(it = this->sorted.begin(); it != this->sorted.end(); ++it){
-        module M(&it.value(), &this->indexBase);
+        module M(&it.value(), &this->indexBase, &this->numberDefines);
         QString primary = it.key();
         M.id        = cnt; cnt++;
 
@@ -1036,6 +1036,16 @@ void Parser::testCase02(){
     v.VP.indexRP     = 16384;
     //v.prepareA6();
     v.prepareA6_stream();
+}
+
+void Parser::definesToInt(){
+    QHash <QString, QString>::iterator it;
+
+    for(it=this->defines.begin(); it != this->defines.end(); ++it){
+        bool isInt;
+        quint32 value = it->toInt(&isInt, 16); // 16 cause all defines like 0x00..
+        if(isInt) this->numberDefines.insert(it.key(), value);
+    }
 }
 
 int Parser::compile(){
@@ -1064,6 +1074,7 @@ int Parser::compile(){
     int lIf = this->loadIncludes();
     // Найти все #define
     int cDr = this->checkDefines(script);
+    definesToInt();
 
     // Составить таблицу переменных.
     int cVr = this->checkVariables(script);
