@@ -8,7 +8,10 @@ class module
 {
 public:
     QStringList             code;
+
+    QByteArray              blockA6;
     QByteArray              compiled;
+
     QList<variable>         variables;
     QStringList             indexBase;
     QString                 compiledHex;
@@ -22,6 +25,7 @@ public:
     quint16                 varCount;
 
     // methods:
+    void                    collectA6();
     module(QStringList      *code, QStringList *indexBase);
     QByteArray              A6();
     QString                 toHex();

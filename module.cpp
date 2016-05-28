@@ -8,6 +8,29 @@ module::module(QStringList *code, QStringList *indexBase)
     this->indexBase             = *indexBase;
 }
 
+void module::collectA6(){
+    // Developed on A6() prototype
+    quint16 CRC16 = 0xF0F0;
+
+    quint8 counter = 0xEE;
+    quint8 typeId  = 0x11;
+
+    this->blockA6.append(counter);
+    this->blockA6.append(typeId);
+    this->blockA6.append(this->primary);
+    this->blockA6.append(this->id);
+    this->blockA6.append(this->varCount%256);
+    this->blockA6.append(this->varCount/256);
+
+    QList<variable>::iterator it;
+    for(it = this->variables.begin(); it != this->variables.end(); ++it){
+        this->blockA6.append(it->A6());
+    }
+
+    this->blockA6.append(CRC16%256);
+    this->blockA6.append(CRC16/256);
+}
+
 QByteArray module::A6(){
     QByteArray result;
 
@@ -25,7 +48,7 @@ QByteArray module::A6(){
     for(it = this->variables.begin(); it != this->variables.end(); ++it){
         it->prepareA6_stream();
         //An << it->atomA6;           // It must works. Lol, it appends quint32 QByteArray size..
-        An << *it->atomA6;
+        //An << it->atomA6.
     }
 
     An << CRC16;
@@ -86,7 +109,9 @@ void module::prepareVariables(){
                         v.VP.indexRP        = address.toInt(&ok, 10);
                         v.VP.eventCHANGE    = 0x00010000;
                     }else if(assignment=="rg"){
+                        bool ok;
                         v.assign = 40;
+                        v.VP.indexRP        = address.toInt(&ok, 10);
                     }else{
                         // error. undefined assignment.
                     }
@@ -114,11 +139,14 @@ void module::compile(){
     //this->compiled.clear();
     QDataStream R(this->compiled);
     prepareVariables();
-    QByteArray RRR = this->A6();
+    //QByteArray RRR = this->A6();
+    //this->compiled.append(RRR);
 
-    this->compiled.append(RRR);
+    this->collectA6();
+    this->compiled.append(this->blockA6);
 
     //this->compiledHex.append(this->code.at(0));
-    this->compiledHex.append(this->toHex());
+    this->toHex();
+    //this->compiledHex.append(this->toHex());
     //R << this->A6();
 }

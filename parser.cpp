@@ -1051,8 +1051,6 @@ int Parser::compile(){
     this->init();
     //this->splitBlocks(*script); // temporary off
 
-
-
     // теперь код поблочно лежит в контейнере sorted.
     //
     // ключ     - название блока
