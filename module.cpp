@@ -244,13 +244,24 @@ void module::classify(QStringList *code, QHash<QString, QStringList> *result, QS
 
 void module::prepareProcedures(){
     QString MODULE_QREGEXP_PROCEDURES = "procedure[\\s\\t]*([\\w]*)[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\)";
+    QRegExp QRM(MODULE_QREGEXP_PROCEDURES);
+
     this->classify(&this->code, &this->proceduresCode, MODULE_QREGEXP_PROCEDURES);
-    //QStringList moduleBody = this->code;
 
     QHash<QString, QStringList>::iterator it;
     QStringList *P;
+    QString headerString;
+    procedure PROC;
+
     for(it = this->proceduresCode.begin(); it != this->proceduresCode.end(); ++it){
         P = &it.value();
+        headerString = it.value().at(0);
+        QRM.indexIn(headerString);
+        PROC.arg1 = QRM.cap(2); // (..) // equal it.key()
+        PROC.name = QRM.cap(1); // Run..
+
+        PROC.code = it.value();
+        this->procedures.append(PROC);
     }
 }
 
@@ -258,6 +269,11 @@ void module::compile(){
 
     prepareVariables();
     prepareProcedures();
+
+    QList<procedure>::iterator PROC;
+    for(PROC = this->procedures.begin(); PROC != this->procedures.end(); ++PROC){
+       PROC->compile();
+    }
 
     this->collectA6();
     this->compiled.append(this->blockA6);

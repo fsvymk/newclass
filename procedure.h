@@ -14,12 +14,19 @@ public:
 
     unsigned int    firstStroke;
 
+    QString         name; // Run and other;
+    QString         arg1; // beetwen brackets;
     QStringList     code;
+
+
+    QList<QString>  atoms;
 
     //methods:
 
     void            compile();
     void            compileHeader();
+    QByteArray      compileAtom(QString atom);
+    void            splitStr(QString str, QList<QString> &atoms);
 };
 
 #endif // PROCEDURE_H
