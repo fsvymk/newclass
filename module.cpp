@@ -178,9 +178,12 @@ void module::classify(QStringList *code, QHash<QString, QStringList> *result, QS
     QStringList allStrings;
     QRegExp classRE(regExp);
 
-    QByteArray bstr  = *code->join(0x13);
-
     QString str;
+    QStringList::iterator it;
+    for(it=code->begin(); it != code->end(); ++it){
+        str.append(*it+"\n");
+    }
+
     QString str_copy = str;
     QString block;
     QString excess;         // то что находится до регулярки
@@ -210,7 +213,7 @@ void module::classify(QStringList *code, QHash<QString, QStringList> *result, QS
         i = classRE.indexIn(str);if(i<0)return;
 
         line = whatLine(str_copy, lineBase + i) + 1;
-        blockName = classRE.cap(1);
+        blockName = classRE.cap(2);
         int j = str.indexOf('{',i);
 
         qc = str[j];
@@ -228,33 +231,27 @@ void module::classify(QStringList *code, QHash<QString, QStringList> *result, QS
 
         block = str.mid(i,j-i);
         allStrings = block.split("\n");
+        allStrings.append("}"); // crutch.. or important small part.
 
         result->insert(blockName, allStrings); // Here.
-
-
+        // We done it..
 
         str = str.right(str.length()-j);
         lineBase += j;
-        /*// deprecated
-        this->Blocks.append(block);//
-        *///
+
    }
 }
 
 void module::prepareProcedures(){
-
-    // This is classify() method and we have no reason to copypaste it here.
-    /*
-    QStringList::iterator it;
-    QRegExp QRProcedure();
-    procedure P;
-    for(it=this->code.begin(); it != this->code.end(); ++it)    {
-       P.code.clear();
-
-       this->procedures.append(P);
-    }*/
-    QString MODULE_QREGEXP_PROCEDURES = "procedure";
+    QString MODULE_QREGEXP_PROCEDURES = "procedure[\\s\\t]*([\\w]*)[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\)";
     this->classify(&this->code, &this->proceduresCode, MODULE_QREGEXP_PROCEDURES);
+    //QStringList moduleBody = this->code;
+
+    QHash<QString, QStringList>::iterator it;
+    QStringList *P;
+    for(it = this->proceduresCode.begin(); it != this->proceduresCode.end(); ++it){
+        P = &it.value();
+    }
 }
 
 void module::compile(){

@@ -707,6 +707,7 @@ void Parser::classify(QString *code, QHash<QString, QStringList> *result, QStrin
 
         block = str.mid(i,j-i);
         allStrings = block.split("\n");
+        allStrings.append("}"); //crutch!
 
         result->insert(blockName, allStrings); // Here.
 
