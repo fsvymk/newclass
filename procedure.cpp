@@ -111,9 +111,9 @@ void procedure::splitStr(QString str, QList<QString> &atoms){
     QString M = "\\\"[\\w\\W]*\\\"";    // all in quotes
     QString S = "\\;";          // separator
 
-    QString Z = C + "|" + E + "|" + CLS + "|" + M + "|" + S; // critical mass of uranium
+    QString Z = C + "|" + E + "|" + CLS + "|" + M + "|" + S; // critica
 
-    QRegExp QR(E);
+    QRegExp QR(Z);
     QR.setMinimal(false);
 
     //int count = 0;
