@@ -111,7 +111,9 @@ QByteArray procedure::compileAtom(QString atom){
         result.append('\0');
 
         result.append(0x01);
+        result.append('\0');
         result.append(idOperation);
+        result.append('\0');
     }
 
 //    0x04
@@ -123,6 +125,31 @@ QByteArray procedure::compileAtom(QString atom){
         result.append('\0');
         result.append(0x02);
         result.append(idVariant);
+    }
+
+
+//    0x06 (длина блока)
+//    0x03 (16b - константа)	0
+//    16-разрядная константа
+
+    if(isPredefined){
+        result.append(0x06);
+        result.append('\0');
+
+        result.append(0x03);
+        result.append('\0');
+        result.append(idPredefined);
+        result.append('\0');
+    }
+
+    quint8 bracketOffset = 0;
+    if(isBraket){
+        result.append(0x06);
+        result.append('\0');
+        result.append(0x05);
+        result.append(idBraket);
+        result.append(bracketOffset);
+        result.append('\0');
     }
 
     /*
@@ -255,5 +282,6 @@ void procedure::compile(){
     QByteArray X;
     for(it = this->atoms.begin(); it != this->atoms.end(); ++it){
         X = this->compileAtom(*it);
+        this->byteBody.append(this->compileAtom(*it));
     }
 }
