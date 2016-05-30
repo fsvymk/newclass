@@ -272,13 +272,20 @@ void module::compile(){
     prepareProcedures();
 
     collectHeader();
-
-    QList<procedure>::iterator PROC;
-    for(PROC = this->procedures.begin(); PROC != this->procedures.end(); ++PROC){
-       PROC->compile();
-    }
-
     this->collectA6();
     this->compiled.append(this->blockA6);
+
+    // QList<procedure>::iterator PROC;
+    // for(PROC = this->procedures.begin(); PROC != this->procedures.end(); ++PROC){
+    //    PROC->compile();
+    //    this->compiled.append(PROC->byteBody);
+    // }
+
+    int n = this->procedureCount;
+    int i = 0;
+    for(i=0; i<n; i++){
+        this->compiled.append(this->procedures.at(i).byteBody);
+    }
+
     this->toHex();
 }
