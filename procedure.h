@@ -6,7 +6,7 @@
 class procedure
 {
 public:
-    procedure();
+    procedure(QStringList *indexBase, QHash<QString, quint32> *numberDefines);
 
     QByteArray      compiled;
     QByteArray      byteHeader;
@@ -17,16 +17,19 @@ public:
     QString         name; // Run and other;
     QString         arg1; // beetwen brackets;
     QStringList     code;
+    QStringList                 indexBase;
+    QHash <QString, quint32>    numberDefines;
 
 
-    QList<QString>  atoms;
+    QStringList  atoms;
 
     //methods:
 
+    QByteArray      numberOfStroke();
     void            compile();
     void            compileHeader();
     QByteArray      compileAtom(QString atom);
-    void            splitStr(QString str, QList<QString> &atoms);
+    void            splitStr(QString str, QStringList &atoms);
 };
 
 #endif // PROCEDURE_H

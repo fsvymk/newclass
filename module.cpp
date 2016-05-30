@@ -251,7 +251,8 @@ void module::prepareProcedures(){
     QHash<QString, QStringList>::iterator it;
     QStringList *P;
     QString headerString;
-    procedure PROC;
+
+    procedure PROC(&this->indexBase, &this->numberDefines);
 
     for(it = this->proceduresCode.begin(); it != this->proceduresCode.end(); ++it){
         P = &it.value();
@@ -269,6 +270,8 @@ void module::compile(){
 
     prepareVariables();
     prepareProcedures();
+
+    collectHeader();
 
     QList<procedure>::iterator PROC;
     for(PROC = this->procedures.begin(); PROC != this->procedures.end(); ++PROC){

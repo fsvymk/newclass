@@ -33,6 +33,24 @@ void Sems::semsInitDefault()
     this->Sem.insert("debug_prnt",	0x23);
 }
 
+/*
+начало круглой скобки		0x01
+конец круглой скобки		0x02
+начало квадратной скобки (индекс)		0x11
+конец квадратной скобки (индекс)		0x12
+начало фигурной скобки (начало программного блока)		0x21
+конец фигурной скобки (конец программного блока)		0x22
+*/
+
+void Sems::initBrakets(){
+        this->Brakets.insert("(",   0x01);
+        this->Brakets.insert(")",   0x02);
+        this->Brakets.insert("[",   0x11);
+        this->Brakets.insert("]",   0x12);
+        this->Brakets.insert("{",   0x21);
+        this->Brakets.insert("}",   0x22);
+}
+
 void Sems::initOps(){
     this->Opeartion.insert("&",     0x01);
     this->Opeartion.insert("|",     0x02);
@@ -84,12 +102,20 @@ void Sems::initTypes(){
     this->Type.insert("msg", 0x05);
 }
 
+void Sems::initJump(){
+    this->Jump.insert("while",  0);
+    this->Jump.insert("if",     1);
+    this->Jump.insert("else",   2);
+}
+
 Sems::Sems()
 {
     semsInitDefault();
     initOps();
     initErrors();
     initPreDefs();
+    initBrakets();
+    initJump();
 }
 
 
