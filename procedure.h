@@ -2,6 +2,7 @@
 #define PROCEDURE_H
 
 #include <QApplication>
+#include <sems.h>
 
 class procedure
 {
@@ -29,7 +30,7 @@ public:
     void            compile();
     void            compileHeader();
     QByteArray      compileAtom(QString atom);
-    void            splitStr(QString str, QStringList &atoms);
+    void            splitStr(QString str, QStringList &atoms, Sems *sems);
 };
 
 #endif // PROCEDURE_H

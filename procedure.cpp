@@ -240,12 +240,12 @@ QByteArray procedure::compileAtom(QString atom){
     return result;
 }
 
-void procedure::splitStr(QString str, QStringList &atoms){
+void procedure::splitStr(QString str, QStringList &atoms, Sems *sems){
     QByteArray result;
     if(str.length()<1) return;
 
     //QRegExp QR("\\\"[\\w\\W]+\\\"|[\\w]+|[\\,\\(\\)]", Qt::CaseInsensitive);
-    Sems sems;
+    //Sems sems;
     QString C = "\\>\\=|\\>|\\<|\\+|\\/|\\-|\\^|\\\\|\\<=|\\||\\=|\\*|\\<\\>|\\:\\=|\\&"; // all Operators.
     QString B = "[\\s\\t]*"; // all spaces and tabs
     QString E = "[\\w]+";     // all functions, keywords, variables types and other that contains alphabet symbols and numbers and _
@@ -272,10 +272,11 @@ void procedure::splitStr(QString str, QStringList &atoms){
 void procedure::compile(){
     QStringList::iterator it;
     QString stroke;
+    Sems sems;
 
     for(it = this->code.begin(); it != this->code.end(); ++it){
         stroke = *it;
-        splitStr(*it, this->atoms);
+        splitStr(*it, this->atoms, &sems);
     }
     this->code;
 
