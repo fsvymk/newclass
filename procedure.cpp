@@ -21,9 +21,9 @@ QByteArray procedure::numberOfStroke(){
     result.append('\0');
 }
 
-QByteArray procedure::compileAtom(QString atom){
+QByteArray procedure::compileAtom(QString atom, Sems *sems){
 
-    Sems sems;
+
     QString C = "\\>\\=|\\>|\\<|\\+|\\/|\\-|\\^|\\\\|\\<=|\\||\\=|\\*|\\<\\>|\\:\\=|\\&"; // all Operators.
     QString B = "[\\s\\t]*"; // all spaces and tabs
     QString E = "[\\w]+";     // all functions, keywords, variables types and other that contains alphabet symbols and numbers and _
@@ -31,22 +31,22 @@ QByteArray procedure::compileAtom(QString atom){
     QString M = "\\\"[\\w\\W]*\\\"";    // all in quotes
     QString S = "\\;";          // separator
 
-    QRegExp HEX("0x[abcdef\\d]+");
+    QRegExp HEX("(0x[abcdef\\d]+)");
     QByteArray result;
 
     bool isVariableName = this->indexBase.contains(atom, Qt::CaseSensitive);
-    bool isFunction     = sems.Sem.contains(atom);
-    bool isOperation    = sems.Opeartion.contains(atom);
-    bool isPredefined   = sems.predefinedVars.contains(atom);
-    bool isJump         = sems.Jump.contains(atom);
-    bool isBraket       = sems.Brakets.contains(atom);
+    bool isFunction     = sems->Sem.contains(atom);
+    bool isOperation    = sems->Opeartion.contains(atom);
+    bool isPredefined   = sems->predefinedVars.contains(atom);
+    bool isJump         = sems->Jump.contains(atom);
+    bool isBraket       = sems->Brakets.contains(atom);
 
-    int idFunction      = sems.Sem.take(atom);
-    int idOperation     = sems.Opeartion.take(atom);
+    int idFunction      = sems->Sem.take(atom);
+    int idOperation     = sems->Opeartion.take(atom);
     int idVariant       = this->indexBase.indexOf(atom);
-    int idPredefined    = sems.predefinedVars.take(atom);
-    int idJump          = sems.Jump.take(atom);
-    int idBraket        = sems.Brakets.take(atom);
+    int idPredefined    = sems->predefinedVars.take(atom);
+    int idJump          = sems->Jump.take(atom);
+    int idBraket        = sems->Brakets.take(atom);
 
     quint32 hexNumber;
     quint16 decNumber;
@@ -265,7 +265,7 @@ void procedure::splitStr(QString str, QStringList &atoms, Sems *sems){
         //++count;
         pos += QR.matchedLength();
         atoms.append(QR.cap(0));
-        compileAtom(QR.cap(0));
+        compileAtom(QR.cap(0), sems);
     }
 }
 
@@ -282,7 +282,7 @@ void procedure::compile(){
 
     QByteArray X;
     for(it = this->atoms.begin(); it != this->atoms.end(); ++it){
-        X = this->compileAtom(*it);
-        this->byteBody.append(this->compileAtom(*it));
+        X = this->compileAtom(*it, &sems);
+        this->byteBody.append(this->compileAtom(*it, &sems));
     }
 }

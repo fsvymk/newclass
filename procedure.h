@@ -29,7 +29,7 @@ public:
     QByteArray      numberOfStroke();
     void            compile();
     void            compileHeader();
-    QByteArray      compileAtom(QString atom);
+    QByteArray      compileAtom(QString atom, Sems *sems);
     void            splitStr(QString str, QStringList &atoms, Sems *sems);
 };
 
