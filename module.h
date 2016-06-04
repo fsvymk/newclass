@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <variable.h>
 #include <procedure.h>
+#include <QRegExp>
 
 class module
 {
@@ -51,6 +52,13 @@ public:
     // Candidates to be transfered to a base abstract class
     int                     whatLine(QString text, int position);
     void                    classify(QStringList *code, QHash<QString, QStringList> *result, QString regExp);
+
+    // REG EXP
+     QRegExp testDefinition;
+     QRegExp testRgPort;
+     QRegExp testVarName;
+
+     QRegExp QRPrimary;//("module[\\s\\t]*\\([\\s\\t]*([\\w]*)[\\s\\t]*\\,[\\s\\t]*([\\w]*)[\\s\\t]*\\)");
 };
 
 #endif // MODULE_H

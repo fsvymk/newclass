@@ -31,6 +31,21 @@ public:
     void            compileHeader();
     QByteArray      compileAtom(QString atom, Sems *sems);
     void            splitStr(QString str, QStringList &atoms, Sems *sems);
+
+    // Reg Exp
+
+    QString C;  // = "\\>\\=|\\>|\\<|\\+|\\/|\\-|\\^|\\\\|\\<=|\\||\\=|\\*|\\<\\>|\\:\\=|\\&"; // all Operators.
+    QString B;  // = "[\\s\\t]*"; // all spaces and tabs
+    QString E;  // = "[\\w]+";     // all functions, keywords, variables types and other that contains alphabet symbols and numbers and _
+    QString CLS;// = "\\[|\\]|\\(|\\)|\\,|\\{|\\}";  // brakes and comma;
+    QString M;  // = "\\\"[\\w\\W]*\\\"";    // all in quotes
+    QString S;  // = "\\;";          // separator
+
+    QString Z;// = C + "|" + E + "|" + CLS + "|" + M + "|" + S; // critical mass of uranium
+
+    QRegExp QR;//(Z);
+
+    QRegExp HEX;//("(0x[abcdef\\d]+)");
 };
 
 #endif // PROCEDURE_H

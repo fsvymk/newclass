@@ -5,6 +5,20 @@ procedure::procedure(QStringList *indexBase, QHash<QString, quint32> *numberDefi
 {
     this->indexBase =   *indexBase;
     this->numberDefines = *numberDefines;
+
+    C = "\\>\\=|\\>|\\<|\\+|\\/|\\-|\\^|\\\\|\\<=|\\||\\=|\\*|\\<\\>|\\:\\=|\\&"; // all Operators.
+    B = "[\\s\\t]*"; // all spaces and tabs
+    E = "[\\w]+";     // all functions, keywords, variables types and other that contains alphabet symbols and numbers and _
+    CLS = "\\[|\\]|\\(|\\)|\\,|\\{|\\}";  // brakes and comma;
+    M = "\\\"[\\w\\W]*\\\"";    // all in quotes
+    S = "\\;";          // separator
+
+    QString Z = C + "|" + E + "|" + CLS + "|" + M + "|" + S; // critical mass of uranium
+
+    QR.setPattern(Z);
+    QR.setMinimal(false);
+
+    HEX.setPattern("(0x[abcdef\\d]+)");
 }
 
 void procedure::compileHeader(){

@@ -4,9 +4,15 @@
 
 module::module(QStringList *code, QStringList *indexBase, QHash<QString, quint32> *numberDefines)
 {
+    VarTypes VT;
     this->code                  = *code;
     this->indexBase             = *indexBase;
     this->numberDefines         = *numberDefines;
+
+    //this->testDefinition.
+    testDefinition.setPattern(VT.getRegExpQueue() + "[\\s\\t]*([^\\n]*)\\;");
+    testRgPort.setPattern("([\\w\\d\\_]*)[\\s\\t]*\\:[\\s\\t]*(port|rg)[\\s\\t]*\\:[\\s\\t]*([\\w\\d\\_]*)"); // иЗя : порт : номер
+    testVarName.setPattern("\\w+");
 }
 
 void module::collectA6(){
@@ -275,11 +281,12 @@ void module::compile(){
     this->collectA6();
     this->compiled.append(this->blockA6);
 
-     QList<procedure>::iterator PROC;
-     for(PROC = this->procedures.begin(); PROC != this->procedures.end(); ++PROC){
-        PROC->compile();
-        this->compiled.append(PROC->byteBody);
-     }
+//     QList<procedure>::iterator PROC;
+//     for(PROC = this->procedures.begin(); PROC != this->procedures.end(); ++PROC){
+//        PROC->compile();
+//        //PROC->compile();
+//        //this->compiled.append(PROC->byteBody);
+//     }
 
 //    int n = this->procedureCount;
 //    int i = 0;
@@ -290,6 +297,20 @@ void module::compile(){
 //        QByteArray XX = this->procedures.takeAt(i).byteBody;
 //        this->compiled.append(this->procedures.at(i).byteBody);
 //    }
+     
+     
+     int n = this->procedures.size();
+     int i = 0;
+ 
+     for(i=0;i<n;i++){
+ 
+         // there are wrong space to compile procedure directly.
+         // Module method compile() must to do it.
+ 
+         this->procedures[i].compile();
+         //this->compiledHex.append(this->procedures[i].compiledHex);
+     }
+     
 
     this->toHex();
 }

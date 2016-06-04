@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     a.cpp \
     module.cpp \
     variable.cpp \
-    procedure.cpp
+    procedure.cpp \
+    myregexp.cpp
 
 HEADERS  += mainwindow.h \
     parser.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     a.h \
     module.h \
     variable.h \
-    procedure.h
+    procedure.h \
+    myregexp.h
 
 FORMS    += mainwindow.ui
 
